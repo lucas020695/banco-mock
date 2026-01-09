@@ -3,10 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
-    <title>Banco Mock</title>
+    <title>BTG Pactual</title>
     <meta name="theme-color" content="#0047A8">
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="manifest" href="data:application/manifest+json,{%22name%22:%22Banco%20Mock%22,%22short_name%22:%22BancoMock%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%230047A8%22,%22theme_color%22:%22%230047A8%22}">
     <style>
         * {
             margin: 0;
@@ -17,8 +16,8 @@
         html, body {
             height: 100%;
             overflow: hidden;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-            background: linear-gradient(180deg, #0047A8 0%, #002B6A 100%);
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Helvetica Neue', sans-serif;
+            background: linear-gradient(180deg, #0047A8 0%, #003580 100%);
             color: white;
         }
 
@@ -30,324 +29,333 @@
             padding-bottom: env(safe-area-inset-bottom);
         }
 
+        /* HEADER */
         .header {
             background: #0047A8;
-            padding: 16px 16px 12px;
+            padding: 12px 16px;
             position: sticky;
             top: 0;
             z-index: 100;
-            backdrop-filter: blur(10px);
             display: flex;
             align-items: center;
             justify-content: space-between;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.05);
         }
 
         .header-left {
             display: flex;
             align-items: center;
             gap: 12px;
+            flex: 1;
         }
 
         .avatar {
             width: 40px;
             height: 40px;
-            border-radius: 20px;
+            border-radius: 50%;
             background: rgba(255, 255, 255, 0.2);
             display: flex;
             align-items: center;
             justify-content: center;
-            font-weight: 700;
-            font-size: 14px;
-            backdrop-filter: blur(10px);
+            font-weight: 600;
+            font-size: 13px;
         }
 
-        .greeting {
-            flex: 1;
-        }
-
-        .greeting small {
-            font-size: 12px;
-            opacity: 0.9;
+        .header-text small {
+            font-size: 11px;
+            opacity: 0.85;
             display: block;
         }
 
-        .greeting strong {
-            font-size: 16px;
-            display: flex;
-            align-items: center;
-            gap: 4px;
+        .header-text strong {
+            font-size: 14px;
+            font-weight: 500;
         }
 
-        .lang-toggle {
-            width: 40px;
-            height: 40px;
-            border-radius: 20px;
+        .header-right {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+        }
+
+        .header-btn {
+            width: 36px;
+            height: 36px;
             background: rgba(255, 255, 255, 0.1);
             border: none;
+            border-radius: 50%;
             color: white;
+            cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            cursor: pointer;
             font-size: 18px;
-            transition: all 0.2s;
+            transition: background 0.2s;
         }
 
-        .lang-toggle:hover {
-            background: rgba(255, 255, 255, 0.2);
+        .header-btn:hover {
+            background: rgba(255, 255, 255, 0.15);
         }
 
-        /* Card conta */
+        /* ACCOUNT CARD */
         .account-card {
-            margin: 20px 16px 16px;
-            padding: 24px 20px;
-            background: rgba(255, 255, 255, 0.1);
-            border-radius: 20px;
-            backdrop-filter: blur(20px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
+            margin: 16px;
+            padding: 24px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 16px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
         }
 
-        .account-title {
-            font-size: 16px;
-            font-weight: 600;
-            margin-bottom: 20px;
+        .account-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 8px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 500;
         }
 
-        .balance-row {
+        .balance-section {
             display: flex;
-            align-items: center;
-            gap: 12px;
+            align-items: baseline;
+            gap: 8px;
             margin-bottom: 24px;
         }
 
-        .balance-label {
-            font-size: 12px;
+        .balance-amount {
+            font-size: 32px;
+            font-weight: 700;
+            letter-spacing: -1px;
+        }
+
+        .balance-hide {
+            width: 28px;
+            height: 28px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            border-radius: 50%;
+            color: white;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .balance-hide:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .account-details {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            font-size: 13px;
+        }
+
+        .detail-item {
+            padding: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 8px;
+            border-left: 2px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .detail-label {
+            font-size: 11px;
             opacity: 0.8;
             margin-bottom: 4px;
         }
 
-        .balance-amount {
-            font-size: 28px;
-            font-weight: 800;
-        }
-
-        .balance-toggle {
-            width: 28px;
-            height: 28px;
-            background: none;
-            border: none;
-            color: white;
-            opacity: 0.7;
-            cursor: pointer;
-            font-size: 20px;
-            transition: opacity 0.2s;
-        }
-
-        .balance-toggle:hover {
-            opacity: 1;
-        }
-
-        .account-details {
-            display: flex;
-            justify-content: space-between;
+        .detail-value {
+            font-weight: 600;
             font-size: 13px;
-            opacity: 0.8;
-            margin-bottom: 20px;
         }
 
-        .account-details strong {
-            opacity: 1;
-            font-weight: 600;
+        /* QUICK ACTIONS */
+        .quick-actions {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr 1fr;
+            gap: 12px;
+            margin: 0 16px 16px;
         }
 
-        .extrato-btn {
-            background: rgba(255, 255, 255, 0.15);
-            border: 1px solid rgba(255, 255, 255, 0.3);
+        .action-btn {
+            padding: 20px 12px;
+            background: rgba(255, 255, 255, 0.08);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
             color: white;
-            padding: 12px 24px;
-            border-radius: 25px;
-            font-size: 14px;
-            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .extrato-btn:hover {
-            background: rgba(255, 255, 255, 0.25);
-        }
-
-        /* Ações */
-        .actions {
-            display: flex;
-            justify-content: space-around;
-            background: rgba(14, 92, 207, 0.8);
-            margin: 0 16px 20px;
-            padding: 16px;
-            border-radius: 20px;
-            backdrop-filter: blur(20px);
-        }
-
-        .action {
             text-align: center;
-            cursor: pointer;
-            padding: 12px 8px;
-            border-radius: 16px;
             transition: all 0.2s;
-            background: none;
-            border: none;
-            color: white;
-            flex: 1;
-        }
-
-        .action:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-
-        .action-icon {
-            width: 32px;
-            height: 32px;
-            display: block;
-            margin: 0 auto 6px;
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
-        }
-
-        .action-label {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
             font-size: 12px;
             font-weight: 500;
         }
 
-        /* SVG Icons */
-        .icon-pix {
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M3 3h6v6H3V3m0 9h6v6H3v-6m9-9h6v6h-6V3m0 9h6v6h-6v-6" stroke="white" stroke-width="0.5" fill="white"/></svg>');
+        .action-btn:active {
+            background: rgba(255, 255, 255, 0.12);
+            transform: scale(0.98);
         }
 
-        .icon-pay {
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M18 6H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-1 11h-8v-2h8v2zm4-7H3V8h18v2z" fill="white"/></svg>');
+        .action-icon {
+            width: 24px;
+            height: 24px;
+            font-size: 18px;
         }
 
-        .icon-transfer {
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M16 8.41L7.41 17 6 15.59 14.59 7 16 8.41zM8 17h10v2H8z" fill="white"/><path d="M16 3l4 4-4 4V7H2v6h2V9h12V3z" fill="white"/></svg>');
-        }
-
-        .icon-card {
-            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M20 8H4V4h16m0 12H4c-1.1 0-2 .9-2 2v4h20v-4c0-1.1-.9-2-2-2m-1-5H5v2h14V7z" fill="white"/></svg>');
-        }
-
-        /* Banner */
-        .banner {
-            margin: 0 16px 20px;
-            background: white;
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+        /* BANNER */
+        .banner-section {
+            margin: 0 16px 16px;
+            padding: 20px;
+            background: linear-gradient(135deg, rgba(255,255,255,0.95) 0%, rgba(245,245,245,0.95) 100%);
+            border-radius: 12px;
             color: #0047A8;
         }
 
-        .banner h3 {
-            font-size: 16px;
-            font-weight: 700;
-            margin-bottom: 8px;
+        .banner-title {
+            font-size: 14px;
+            font-weight: 600;
+            margin-bottom: 4px;
         }
 
-        .banner p {
+        .banner-desc {
+            font-size: 12px;
             color: #666;
-            font-size: 13px;
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .banner-btn {
             background: #0047A8;
             color: white;
             border: none;
-            padding: 14px 28px;
-            border-radius: 25px;
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 13px;
             font-weight: 600;
             cursor: pointer;
             width: 100%;
-            transition: all 0.2s;
+            transition: background 0.2s;
         }
 
         .banner-btn:hover {
             background: #003580;
-            transform: translateY(-2px);
         }
 
-        /* Atividades */
-        .activities {
+        /* STATEMENT */
+        .statement-section {
             margin: 0 16px 100px;
+            padding: 20px;
             background: white;
-            border-radius: 20px;
-            padding: 24px;
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            border-radius: 12px;
             color: #333;
         }
 
-        .activities-header {
+        .statement-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
             margin-bottom: 16px;
         }
 
-        .activities-header h3 {
-            font-size: 18px;
-            font-weight: 700;
+        .statement-title {
+            font-size: 16px;
+            font-weight: 600;
         }
 
         .filter-btn {
-            color: #0047A8;
-            font-weight: 600;
-            font-size: 14px;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 4px;
             background: none;
             border: none;
-        }
-
-        .date {
-            font-size: 13px;
-            color: #999;
-            margin-bottom: 16px;
-        }
-
-        .activity {
-            padding: 20px;
-            background: #F8FAFF;
-            border-radius: 16px;
-            margin-bottom: 12px;
-            cursor: pointer;
-            border-left: 4px solid #0047A8;
-            transition: all 0.2s;
-        }
-
-        .activity:hover {
-            background: #E3F2FD;
-        }
-
-        .activity-title {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .activity-desc {
-            color: #666;
+            color: #0047A8;
             font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
         }
 
-        /* Modal */
+        .date-label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 12px;
+        }
+
+        .transaction {
+            padding: 16px 0;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            cursor: pointer;
+            transition: background 0.1s;
+        }
+
+        .transaction:hover {
+            background: #f9f9f9;
+            padding: 16px;
+            margin: 0 -16px;
+            padding-left: 16px;
+            padding-right: 16px;
+        }
+
+        .transaction:last-child {
+            border-bottom: none;
+        }
+
+        .tx-left {
+            flex: 1;
+        }
+
+        .tx-merchant {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+            color: #333;
+        }
+
+        .tx-category {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .tx-amount {
+            font-weight: 700;
+            font-size: 14px;
+            text-align: right;
+        }
+
+        .tx-amount.debit {
+            color: #EF4444;
+        }
+
+        .tx-amount.credit {
+            color: #10B981;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-icon {
+            font-size: 40px;
+            margin-bottom: 12px;
+        }
+
+        /* MODALS */
         .modal {
             position: fixed;
             top: 0;
             left: 0;
             right: 0;
             bottom: 0;
-            background: rgba(0, 0, 0, 0.6);
-            display: none;
+            background: rgba(0, 0, 0, 0.5);
             z-index: 2000;
+            display: none;
             padding: 20px;
             align-items: flex-end;
         }
@@ -358,9 +366,9 @@
 
         .modal-content {
             background: white;
-            border-radius: 24px 24px 0 0;
-            padding: 32px 24px;
-            max-height: 85vh;
+            border-radius: 20px 20px 0 0;
+            padding: 24px;
+            max-height: 90vh;
             overflow-y: auto;
             width: 100%;
             color: #333;
@@ -370,161 +378,121 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 24px;
-        }
-
-        .modal-header h2 {
-            font-size: 20px;
-            font-weight: 700;
-        }
-
-        .close-modal {
-            background: none;
-            border: none;
-            font-size: 28px;
-            cursor: pointer;
-            color: #999;
-            transition: color 0.2s;
-        }
-
-        .close-modal:hover {
-            color: #333;
-        }
-
-        /* Pix Grid */
-        .pix-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
-
-        .pix-contact {
-            padding: 20px;
-            border: 2px solid #E3F2FD;
-            border-radius: 16px;
-            cursor: pointer;
-            transition: all 0.2s;
-            background: white;
-        }
-
-        .pix-contact:hover {
-            border-color: #0047A8;
-        }
-
-        .pix-contact.active {
-            border-color: #0047A8;
-            background: #E3F2FD;
-        }
-
-        .contact-name {
-            font-weight: 700;
-            margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .contact-type {
-            font-size: 12px;
-            color: #666;
-        }
-
-        /* Form */
-        .form-group {
             margin-bottom: 20px;
         }
 
-        .form-group label {
+        .modal-title {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: #999;
+        }
+
+        .form-group {
+            margin-bottom: 16px;
+        }
+
+        .form-label {
             display: block;
+            font-size: 13px;
             font-weight: 600;
             margin-bottom: 8px;
-            font-size: 14px;
-        }
-
-        .form-group input {
-            width: 100%;
-            padding: 16px;
-            border: 2px solid #E0E0E0;
-            border-radius: 12px;
-            font-size: 16px;
-            font-family: inherit;
             color: #333;
-            transition: all 0.2s;
         }
 
-        .form-group input:focus {
+        .form-input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            transition: border 0.2s;
+        }
+
+        .form-input:focus {
             outline: none;
             border-color: #0047A8;
-            box-shadow: 0 0 0 3px rgba(0, 71, 168, 0.1);
         }
 
-        /* Buttons */
-        .pix-confirm {
+        .btn-primary {
             width: 100%;
-            padding: 18px;
+            padding: 14px;
             background: #0047A8;
             color: white;
             border: none;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: 700;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
-            margin-bottom: 12px;
+            transition: background 0.2s;
+            margin-bottom: 8px;
         }
 
-        .pix-confirm:hover {
+        .btn-primary:hover {
             background: #003580;
-            transform: translateY(-2px);
         }
 
-        .cancel-btn {
+        .btn-secondary {
             width: 100%;
-            padding: 18px;
-            background: #F0F0F0;
+            padding: 14px;
+            background: #f0f0f0;
             color: #333;
             border: none;
-            border-radius: 16px;
-            font-size: 16px;
-            font-weight: 700;
+            border-radius: 8px;
+            font-size: 15px;
+            font-weight: 600;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: background 0.2s;
         }
 
-        .cancel-btn:hover {
-            background: #E0E0E0;
+        .btn-secondary:hover {
+            background: #e0e0e0;
         }
 
-        /* Receipt */
+        /* RECEIPT */
         .receipt {
-            background: linear-gradient(135deg, #D4EDDA 0%, #C3E6CB 100%);
-            border-radius: 20px;
-            padding: 24px;
-            margin: 24px 0;
+            background: #f0f9f4;
+            border: 1px solid #d4edda;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .receipt-header {
             text-align: center;
+            margin-bottom: 20px;
         }
 
-        .checkmark-large {
-            font-size: 64px;
-            color: #28A745;
-            margin-bottom: 16px;
+        .receipt-icon {
+            font-size: 48px;
+            margin-bottom: 8px;
         }
 
-        .receipt-title {
+        .receipt-status {
             font-size: 16px;
             font-weight: 700;
-            color: #28A745;
-            margin-bottom: 16px;
+            color: #10B981;
+            margin-bottom: 4px;
+        }
+
+        .receipt-msg {
+            font-size: 13px;
+            color: #666;
         }
 
         .receipt-content {
             background: white;
-            padding: 20px;
-            border-radius: 16px;
-            text-align: left;
-            font-size: 13px;
+            padding: 16px;
+            border-radius: 8px;
+            font-size: 12px;
             line-height: 1.8;
-            font-family: monospace;
-            margin-bottom: 16px;
         }
 
         .receipt-line {
@@ -532,254 +500,72 @@
             justify-content: space-between;
             margin-bottom: 8px;
             padding-bottom: 8px;
-            border-bottom: 1px solid #E0E0E0;
+            border-bottom: 1px solid #e0e0e0;
         }
 
         .receipt-line:last-child {
             border-bottom: none;
+            margin-bottom: 0;
         }
 
         .receipt-section {
-            margin-bottom: 16px;
-            padding-bottom: 12px;
-            border-bottom: 1px dashed #ccc;
-        }
-
-        .receipt-section:last-child {
-            border-bottom: none;
+            margin-bottom: 12px;
         }
 
         .receipt-section-title {
             font-weight: 700;
-            margin-bottom: 8px;
-            font-size: 12px;
+            font-size: 11px;
             text-transform: uppercase;
-            color: #28A745;
+            color: #10B981;
+            margin-bottom: 8px;
         }
 
-        .hidden {
-            display: none !important;
+        .pix-input-group {
+            position: relative;
+            margin-bottom: 16px;
         }
 
-        /* Transaction List */
-        .transaction-list {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-        }
-
-        .transaction-item {
-            padding: 16px;
-            background: #F8FAFF;
-            border-radius: 12px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-left: 4px solid #0047A8;
-        }
-
-        .transaction-info {
-            flex: 1;
-        }
-
-        .transaction-merchant {
-            font-weight: 600;
-            font-size: 14px;
-            margin-bottom: 4px;
-        }
-
-        .transaction-date {
-            font-size: 12px;
-            color: #999;
-        }
-
-        .transaction-amount {
-            font-weight: 700;
-            font-size: 15px;
-        }
-
-        .transaction-amount.credit {
-            color: #28A745;
-        }
-
-        .transaction-amount.debit {
-            color: #EF4444;
-        }
-
-        /* Empty State */
-        .empty-state {
-            text-align: center;
-            padding: 40px 20px;
-            color: #999;
-        }
-
-        .empty-icon {
-            font-size: 48px;
-            margin-bottom: 12px;
-        }
-
-        .quick-suggestion {
-            padding: 8px 12px;
-            background: white;
-            border: 1px solid #E0E0E0;
-            border-radius: 8px;
-            font-size: 12px;
-            cursor: pointer;
-            margin-bottom: 6px;
-            transition: all 0.2s;
-        }
-
-        .quick-suggestion:hover {
-            background: #E3F2FD;
-            border-color: #0047A8;
-        }
-
-        .modal-full {
-            position: fixed;
-            top: 0;
+        .pix-suggestions {
+            position: absolute;
+            top: 100%;
             left: 0;
             right: 0;
-            bottom: 0;
             background: white;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            border-radius: 0 0 8px 8px;
+            max-height: 200px;
+            overflow-y: auto;
+            z-index: 1001;
             display: none;
-            z-index: 2500;
-            overflow-y: auto;
-            flex-direction: column;
         }
 
-        .modal-full.active {
-            display: flex;
+        .pix-suggestions.active {
+            display: block;
         }
 
-        .modal-full-header {
-            background: #0047A8;
-            color: white;
-            padding: 16px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            position: sticky;
-            top: 0;
-        }
-
-        .modal-full-header h2 {
-            font-size: 18px;
-            font-weight: 700;
-        }
-
-        .close-full-modal {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 24px;
-            cursor: pointer;
-        }
-
-        .modal-full-content {
-            flex: 1;
-            padding: 20px;
-            overflow-y: auto;
-        }
-
-        .bill-item {
-            background: #F8FAFF;
-            padding: 16px;
-            border-radius: 12px;
-            margin-bottom: 12px;
-            border-left: 4px solid #0047A8;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-
-        .bill-item:hover {
-            background: #E3F2FD;
-        }
-
-        .bill-item.paid {
-            border-left-color: #10B981;
-            opacity: 0.6;
-        }
-
-        .bill-name {
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .bill-amount {
-            font-size: 14px;
-            font-weight: 700;
-            color: #EF4444;
-        }
-
-        .bill-date {
-            font-size: 12px;
-            color: #999;
-            margin-top: 4px;
-        }
-
-        .bill-status {
-            font-size: 11px;
-            padding: 4px 8px;
-            border-radius: 4px;
-            display: inline-block;
-            margin-top: 8px;
-        }
-
-        .bill-status.pending {
-            background: rgba(239, 68, 68, 0.1);
-            color: #EF4444;
-        }
-
-        .bill-status.paid {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10B981;
-        }
-
-        .card-detail {
-            background: linear-gradient(135deg, #0047A8 0%, #003580 100%);
-            color: white;
-            padding: 24px;
-            border-radius: 16px;
-            margin-bottom: 20px;
-            font-family: monospace;
-        }
-
-        .card-number {
-            font-size: 14px;
-            letter-spacing: 2px;
-            margin-bottom: 16px;
-            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
-        }
-
-        .card-info {
-            display: flex;
-            justify-content: space-between;
-            font-size: 12px;
-        }
-
-        .card-holder {
-            text-align: left;
-        }
-
-        .card-expiry {
-            text-align: right;
-        }
-
-        .card-info-row {
-            display: flex;
-            justify-content: space-between;
+        .suggestion-item {
             padding: 12px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 8px;
-            margin-bottom: 8px;
+            border-bottom: 1px solid #f0f0f0;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .suggestion-item:hover {
+            background: #f9f9f9;
+        }
+
+        .suggestion-name {
+            font-weight: 600;
             font-size: 13px;
         }
 
-        .card-info-row strong {
-            color: #fff;
+        .suggestion-key {
+            font-size: 11px;
+            color: #999;
+            margin-top: 2px;
         }
     </style>
-</CANVAS_EDIT_3>
 </head>
 <body>
     <div class="app">
@@ -787,532 +573,307 @@
         <div class="header">
             <div class="header-left">
                 <div class="avatar">LO</div>
-                <div class="greeting">
-                    <small id="helloLabel">Olá,</small>
-                    <strong id="nameLabel">Lucas <span>▼</span></strong>
+                <div class="header-text">
+                    <small>Olá,</small>
+                    <strong id="userName">Lucas</strong>
                 </div>
             </div>
-            <button class="lang-toggle" onclick="toggleLanguage()" title="Toggle Language" id="langBtn">PT</button>
+            <div class="header-right">
+                <button class="header-btn" onclick="toggleLanguage()" id="langBtn">EN</button>
+                <button class="header-btn" onclick="showProfile()">≡</button>
+            </div>
         </div>
 
-        <!-- CONTA CORRENTE -->
+        <!-- ACCOUNT CARD -->
         <div class="account-card">
-            <div class="account-title" id="accountTitle">Conta corrente</div>
+            <div class="account-label">Saldo disponível</div>
+            <div class="balance-section">
+                <div class="balance-amount" id="balance">R$ 0,00</div>
+                <button class="balance-hide" onclick="toggleBalance()">●●●</button>
+            </div>
 
-            <div class="balance-row">
-                <div>
-                    <div class="balance-label" id="balanceLabel">Saldo atual</div>
-                    <div class="balance-amount" id="balanceAmount">R$ 12.450,82</div>
+            <div class="account-details">
+                <div class="detail-item">
+                    <div class="detail-label">Limite</div>
+                    <div class="detail-value">R$ 15.000,00</div>
                 </div>
-                <button class="balance-toggle" onclick="toggleBalance()" title="Show/Hide">👁️</button>
+                <div class="detail-item">
+                    <div class="detail-label">Disponível</div>
+                    <div class="detail-value">R$ 12.340,50</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Banco</div>
+                    <div class="detail-value">208</div>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Agência</div>
+                    <div class="detail-value">0020</div>
+                </div>
             </div>
-
-            <div class="account-details">
-                <span id="limitLabel">Limite da conta</span>
-                <span><strong id="limitValue">Ver detalhes</strong></span>
-            </div>
-            <div class="account-details">
-                <span id="openFinanceLabel">Saldo Open Finance</span>
-                <span><strong id="openFinanceValue">R$ 0,00</strong></span>
-            </div>
-
-            <button class="extrato-btn" onclick="alert(getLang('statementMsg'))" id="estatoBtn">Ver extrato</button>
         </div>
 
-        <!-- AÇÕES -->
-        <div class="actions">
-            <button class="action" onclick="showPixModal()">
-                <div class="action-icon icon-pix"></div>
-                <div class="action-label" id="pixLabel">Pix</div>
+        <!-- QUICK ACTIONS -->
+        <div class="quick-actions">
+            <button class="action-btn" onclick="showPixModal()">
+                <div class="action-icon">⊞⊞</div>
+                <span>Pix</span>
             </button>
-            <button class="action" onclick="showPayBillsModal()">
-                <div class="action-icon icon-pay"></div>
-                <div class="action-label" id="payLabel">Pagar</div>
+            <button class="action-btn" onclick="showPayModal()">
+                <div class="action-icon">◼</div>
+                <span>Pagar</span>
             </button>
-            <button class="action" onclick="showTransferModal()">
-                <div class="action-icon icon-transfer"></div>
-                <div class="action-label" id="transferLabel">Transferir</div>
+            <button class="action-btn" onclick="showTransferModal()">
+                <div class="action-icon">⇄</div>
+                <span>Transferir</span>
             </button>
-            <button class="action" onclick="showCardModal()">
-                <div class="action-icon icon-card"></div>
-                <div class="action-label" id="cardLabel">Cartão</div>
+            <button class="action-btn" onclick="showCardModal()">
+                <div class="action-icon">◰</div>
+                <span>Cartão</span>
             </button>
         </div>
 
         <!-- BANNER -->
-        <div class="banner">
-            <h3 id="bannerTitle">Use Pix para transferências instantâneas</h3>
-            <p id="bannerDesc">Rápido, seguro e disponível 24h. Sem taxas para pessoas físicas.</p>
-            <button class="banner-btn" onclick="showPixModal()" id="bannerBtn">Começar Pix</button>
+        <div class="banner-section">
+            <div class="banner-title">Encontre oportunidades de investimento</div>
+            <div class="banner-desc">Conheça nossos produtos de investimento exclusivos</div>
+            <button class="banner-btn" onclick="alert('Seção de investimentos')">Explorar</button>
         </div>
 
-        <!-- EXTRATO / TRANSACTIONS -->
-        <div class="activities">
-            <div class="activities-header">
-                <h3 id="activitiesTitle">Extrato</h3>
-                <button class="filter-btn" onclick="filterTransactions()" id="filterBtn">
-                    🗂️ <span id="filterLabel">Filtro</span>
-                </button>
+        <!-- STATEMENT -->
+        <div class="statement-section">
+            <div class="statement-header">
+                <div class="statement-title">Extrato</div>
+                <button class="filter-btn" onclick="alert('Filtros em desenvolvimento')">Filtrar</button>
             </div>
-            <div class="date" id="dateLabel"></div>
-            <div class="transaction-list" id="transactionList">
-                <div class="empty-state">
-                    <div class="empty-icon">📋</div>
-                    <p id="noTransactionsLabel">Nenhuma transação realizada</p>
+            <div class="date-label" id="dateLabel"></div>
+            <div id="transactionList"></div>
+        </div>
+    </div>
+
+    <!-- PIX MODAL -->
+    <div id="pixModal" class="modal">
+        <div class="modal-content">
+            <div id="pixStep1">
+                <div class="modal-header">
+                    <div class="modal-title">Enviar Pix</div>
+                    <button class="modal-close" onclick="closePixModal()">×</button>
                 </div>
+
+                <div class="pix-input-group">
+                    <label class="form-label">Chave Pix</label>
+                    <input type="text" id="pixKey" class="form-input" placeholder="CPF, Email, Telefone ou Chave" oninput="showPixSuggestions()">
+                    <div class="pix-suggestions" id="pixSuggestions"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Valor</label>
+                    <div style="display: flex; gap: 8px;">
+                        <span style="padding: 12px; color: #999; font-weight: 600;">R$</span>
+                        <input type="number" id="pixAmount" class="form-input" placeholder="0,00" step="0.01" min="0">
+                    </div>
+                </div>
+
+                <button class="btn-primary" onclick="confirmPix()">Confirmar Pix</button>
+                <button class="btn-secondary" onclick="closePixModal()">Cancelar</button>
+            </div>
+
+            <div id="pixStep2" style="display: none;">
+                <div class="receipt">
+                    <div class="receipt-header">
+                        <div class="receipt-status">Pix Enviado com Sucesso</div>
+                        <div class="receipt-msg">Transferência realizada instantaneamente</div>
+                    </div>
+                    <div class="receipt-content" id="pixReceipt"></div>
+                </div>
+                <button class="btn-primary" onclick="closeBothModals()">Voltar</button>
             </div>
         </div>
     </div>
 
-    <!-- MODAL PAGAR CONTAS -->
-    <div id="payBillsModal" class="modal-full">
-        <div class="modal-full-header">
-            <h2 id="payTitle">Pagar Contas</h2>
-            <button class="close-full-modal" onclick="closePayBillsModal()">×</button>
+    <!-- TRANSFER MODAL -->
+    <div id="transferModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Transferência Bancária</div>
+                <button class="modal-close" onclick="closeTransferModal()">×</button>
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Banco</label>
+                <input type="text" class="form-input" id="bankName" placeholder="Ex: Bradesco, Itaú, Santander">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Agência</label>
+                <input type="text" class="form-input" id="agency" placeholder="1234-5">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Conta</label>
+                <input type="text" class="form-input" id="account" placeholder="654321-8">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Titular</label>
+                <input type="text" class="form-input" id="holder" placeholder="Nome Completo">
+            </div>
+            <div class="form-group">
+                <label class="form-label">Valor</label>
+                <div style="display: flex; gap: 8px;">
+                    <span style="padding: 12px; color: #999; font-weight: 600;">R$</span>
+                    <input type="number" id="transferAmount" class="form-input" placeholder="0,00" step="0.01" min="0">
+                </div>
+            </div>
+
+            <button class="btn-primary" onclick="confirmTransfer()">Confirmar</button>
+            <button class="btn-secondary" onclick="closeTransferModal()">Cancelar</button>
         </div>
-        <div class="modal-full-content">
+    </div>
+
+    <!-- CARD MODAL -->
+    <div id="cardModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Meu Cartão</div>
+                <button class="modal-close" onclick="closeCardModal()">×</button>
+            </div>
+
+            <div style="background: linear-gradient(135deg, #0047A8 0%, #003580 100%); color: white; padding: 24px; border-radius: 12px; margin-bottom: 20px;">
+                <div style="font-family: monospace; font-size: 16px; letter-spacing: 2px; margin-bottom: 20px;">4532 •••• •••• 8901</div>
+                <div style="display: flex; justify-content: space-between; font-size: 11px;">
+                    <div>
+                        <div style="opacity: 0.8; margin-bottom: 4px;">TITULAR</div>
+                        <div style="font-weight: 600;">LUCAS OLIVEIRA</div>
+                    </div>
+                    <div>
+                        <div style="opacity: 0.8; margin-bottom: 4px;">VALIDADE</div>
+                        <div style="font-weight: 600;">12/27</div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="background: #f9f9f9; padding: 16px; border-radius: 8px; margin-bottom: 20px; font-size: 13px;">
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e0e0e0;">
+                    <span>Limite Total</span>
+                    <strong>R$ 15.000,00</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e0e0e0;">
+                    <span>Disponível</span>
+                    <strong>R$ 12.340,50</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between; margin-bottom: 12px; padding-bottom: 12px; border-bottom: 1px solid #e0e0e0;">
+                    <span>Fatura Aberta</span>
+                    <strong>R$ 2.659,50</strong>
+                </div>
+                <div style="display: flex; justify-content: space-between;">
+                    <span>Vencimento</span>
+                    <strong>10 de Fevereiro</strong>
+                </div>
+            </div>
+
+            <button class="btn-secondary" onclick="closeCardModal()">Voltar</button>
+        </div>
+    </div>
+
+    <!-- PAY MODAL -->
+    <div id="payModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <div class="modal-title">Pagar Contas</div>
+                <button class="modal-close" onclick="closePayModal()">×</button>
+            </div>
             <div id="billsList"></div>
         </div>
     </div>
 
-    <!-- MODAL TRANSFERÊNCIA -->
-    <div id="transferModal" class="modal-full">
-        <div class="modal-full-header">
-            <h2 id="transferTitle">Transferência Bancária</h2>
-            <button class="close-full-modal" onclick="closeTransferModal()">×</button>
-        </div>
-        <div class="modal-full-content">
-            <div class="form-group">
-                <label id="bankLabel">Banco / Bank</label>
-                <input type="text" id="transferBank" placeholder="Ex: Bradesco, Itaú, Santander">
-            </div>
-            <div class="form-group">
-                <label id="agencyLabel">Agência / Agency</label>
-                <input type="text" id="transferAgency" placeholder="1234-5">
-            </div>
-            <div class="form-group">
-                <label id="accountLabel">Conta / Account</label>
-                <input type="text" id="transferAccount" placeholder="654321-8">
-            </div>
-            <div class="form-group">
-                <label id="holderLabel">Titular / Holder</label>
-                <input type="text" id="transferHolder" placeholder="Nome Completo">
-            </div>
-            <div class="form-group">
-                <label id="amountTransferLabel">Valor / Amount</label>
-                <div style="display: flex; gap: 8px;">
-                    <span style="padding: 14px; color: #999; font-weight: 600;">R$</span>
-                    <input type="number" id="transferAmount" placeholder="0,00" step="0.01" min="0">
-                </div>
-            </div>
-            <button class="pix-confirm" onclick="confirmTransfer()">Confirmar Transferência</button>
-            <button class="cancel-btn" onclick="closeTransferModal()">Cancelar</button>
-        </div>
-    </div>
-
-    <!-- MODAL CARTÃO -->
-    <div id="cardModal" class="modal-full">
-        <div class="modal-full-header">
-            <h2 id="cardTitle">Meu Cartão / My Card</h2>
-            <button class="close-full-modal" onclick="closeCardModal()">×</button>
-        </div>
-        <div class="modal-full-content">
-            <div class="card-detail">
-                <div class="card-number">4532 •••• •••• 8901</div>
-                <div class="card-info">
-                    <div class="card-holder">
-                        <div style="font-size: 10px; opacity: 0.8;">TITULARI</div>
-                        <div>LUCAS OLIVEIRA</div>
-                    </div>
-                    <div class="card-expiry">
-                        <div style="font-size: 10px; opacity: 0.8;">VALIDADE</div>
-                        <div>12/27</div>
-                    </div>
-                </div>
-            </div>
-
-            <div id="cardStats"></div>
-
-            <button class="pix-confirm" style="background: #EF4444;" onclick="blockCard()">Bloquear Cartão / Block Card</button>
-            <button class="cancel-btn" onclick="closeCardModal()">Voltar / Back</button>
-        </div>
-    </div>
-
-    <!-- MODAL PIX -->
-    <div id="pixModal" class="modal">
-        <div class="modal-content">
-            <div id="pixStep1" class="hidden">
-                <div class="modal-header">
-                    <h2 id="pixTitle">Enviar Pix</h2>
-                    <button class="close-modal" onclick="closePixModal()">×</button>
-                </div>
-
-                <div class="form-group">
-                    <label id="pixKeyLabel">Chave Pix / Pix Key</label>
-                    <input type="text" id="pixKey" placeholder="CPF, Email, Telefone ou Chave" style="margin-bottom: 8px;">
-                    <div style="font-size: 12px; color: #999; margin-top: 8px;" id="pixKeyHelp">Insira CPF, email, telefone ou chave aleatória</div>
-                    <div style="margin-top: 12px; padding: 12px; background: #F0F0F0; border-radius: 8px; display: none;" id="suggestionsBox">
-                        <div style="font-size: 12px; font-weight: 600; margin-bottom: 8px;">Sugestões rápidas:</div>
-                        <div id="quickSuggestions"></div>
-                    </div>
-                </div>
-
-                <div class="form-group">
-                    <label id="amountLabel">Valor / Amount</label>
-                    <div style="display: flex; gap: 8px;">
-                        <span style="padding: 14px; color: #999; font-weight: 600;">R$</span>
-                        <input type="number" id="pixAmount" placeholder="0,00" step="0.01" min="0">
-                    </div>
-                </div>
-</CANVAS_EDIT_1>
-
-                <button class="pix-confirm" onclick="confirmPix()" id="confirmBtn">Confirmar Pix</button>
-                <button class="cancel-btn" onclick="closePixModal()" id="cancelBtn">Cancelar</button>
-            </div>
-
-            <div id="pixStep2" class="hidden">
-                <div class="receipt">
-                    <div class="checkmark-large">✅</div>
-                    <div class="receipt-title" id="successTitle">Pix Enviado com Sucesso!</div>
-                    <p id="successMsg" style="color: #28A745; margin-bottom: 16px;">Seu Pix foi processado instantaneamente.</p>
-                </div>
-
-                <div class="receipt-content" id="pixReceipt"></div>
-
-                <button class="pix-confirm" onclick="closeBothModals()" id="doneBtn">Voltar ao Dashboard</button>
-            </div>
-        </div>
-    </div>
-
     <script>
-        // Translations
         const translations = {
             pt: {
-                helloLabel: 'Olá,',
-                nameLabel: 'Lucas',
-                accountTitle: 'Conta corrente',
-                balanceLabel: 'Saldo atual',
-                limitLabel: 'Limite da conta',
-                limitValue: 'Ver detalhes',
-                openFinanceLabel: 'Saldo Open Finance',
-                openFinanceValue: 'R$ 0,00',
-                estatoBtn: 'Ver extrato',
-                pixLabel: 'Pix',
-                payLabel: 'Pagar',
-                transferLabel: 'Transferir',
-                cardLabel: 'Cartão',
-                bannerTitle: 'Use Pix para transferências instantâneas',
-                bannerDesc: 'Rápido, seguro e disponível 24h. Sem taxas para pessoas físicas.',
-                bannerBtn: 'Começar Pix',
-                activitiesTitle: 'Atividades',
-                filterLabel: 'Filtro',
-                dateLabel: 'Hoje · 09 Jan',
-                activityTitle: 'Limite da conta não pode ser ativado',
-                activityDesc: 'Toque para ver o que precisa ajustar no seu limite.',
-                pixTitle: 'Enviar Pix',
-                selectRecipientLabel: 'Selecione o Beneficiário',
-                amountLabel: 'Valor',
-                confirmBtn: 'Confirmar Pix',
-                cancelBtn: 'Cancelar',
-                successTitle: 'Pix Enviado com Sucesso!',
-                successMsg: 'Seu Pix foi processado instantaneamente.',
-                doneBtn: 'Voltar ao Dashboard',
-                statementMsg: '📊 Extrato carregado!',
-                comingSoon: '🔄 Esta funcionalidade em breve!',
-                limitDetail: '📋 Detalhes do limite da sua conta.',
-                noTransactionsLabel: 'Nenhuma transação realizada',
-                joao: 'João Silva',
-                maria: 'Maria Santos',
-                pedro: 'Pedro Lima',
-                ana: 'Ana Costa'
+                today: 'Hoje',
+                paymentSuccess: 'Pagamento realizado com sucesso',
+                transferSuccess: 'Transferência realizada com sucesso',
+                insufficientBalance: 'Saldo insuficiente',
+                fillAllFields: 'Preencha todos os campos'
             },
             en: {
-                helloLabel: 'Hi,',
-                nameLabel: 'Lucas',
-                accountTitle: 'Checking Account',
-                balanceLabel: 'Available Balance',
-                limitLabel: 'Account Limit',
-                limitValue: 'View Details',
-                openFinanceLabel: 'Open Finance Balance',
-                openFinanceValue: 'R$ 0.00',
-                estatoBtn: 'View Statement',
-                pixLabel: 'Pix',
-                payLabel: 'Pay',
-                transferLabel: 'Transfer',
-                cardLabel: 'Card',
-                bannerTitle: 'Use Pix for instant transfers',
-                bannerDesc: 'Fast, secure and available 24h. No fees for individuals.',
-                bannerBtn: 'Start Pix',
-                activitiesTitle: 'Activities',
-                filterLabel: 'Filter',
-                dateLabel: 'Today · Jan 09',
-                activityTitle: 'Account limit cannot be activated',
-                activityDesc: 'Tap to see what you need to adjust on your limit.',
-                pixTitle: 'Send Pix',
-                selectRecipientLabel: 'Select Recipient',
-                amountLabel: 'Amount',
-                confirmBtn: 'Confirm Pix',
-                cancelBtn: 'Cancel',
-                successTitle: 'Pix Sent Successfully!',
-                successMsg: 'Your Pix was processed instantly.',
-                doneBtn: 'Back to Dashboard',
-                statementMsg: '📊 Mock statement loaded!',
-                comingSoon: '🔄 This feature coming soon!',
-                limitDetail: '📋 Details about your account limit.',
-                joao: 'John Smith',
-                maria: 'Maria Santos',
-                pedro: 'Peter Lima',
-                ana: 'Anna Costa'
+                today: 'Today',
+                paymentSuccess: 'Payment completed successfully',
+                transferSuccess: 'Transfer completed successfully',
+                insufficientBalance: 'Insufficient balance',
+                fillAllFields: 'Fill all fields'
             }
         };
 
-        const mockRecipients = [
-            { name: 'joao', key: '123.456.789-00', type: 'CPF', bank: 'Nubank', ispb: '18236120' },
-            { name: 'maria', key: 'maria@email.com', type: 'Email', bank: 'Itaú', ispb: '60701190' },
-            { name: 'pedro', key: '(11) 98765-4321', type: 'Telefone', bank: 'Bradesco', ispb: '60746948' },
-            { name: 'ana', key: 'a7c3f2e8-b1d9-4e6a-9c2f-7b8a1d3e5f9a', type: 'Chave Aleatória', bank: 'Caixa', ispb: '00360305' }
+        let currentLanguage = 'pt';
+        let balanceVisible = true;
+        let balance = 5000;
+        let transactions = [
+            { merchant: 'Supermercado Pão de Açúcar', category: 'Compras', amount: -245.90, date: '09 Jan, 14:32' },
+            { merchant: 'Netflix Subscription', category: 'Streaming', amount: -59.90, date: '09 Jan, 10:15' },
+            { merchant: 'Transferência Recebida', category: 'Transferência', amount: 500, date: '08 Jan, 16:45' },
+            { merchant: 'Banco Itaú', category: 'Transferência', amount: -200, date: '08 Jan, 09:20' },
+            { merchant: 'Posto de Gasolina Shell', category: 'Combustível', amount: -180.50, date: '07 Jan, 18:30' },
+            { merchant: 'Restaurante Outback', category: 'Alimentação', amount: -85.75, date: '07 Jan, 20:00' }
         ];
 
-        let currentLanguage = 'pt';
-        let selectedPixRecipient = null;
-        let balance = 0;
-        let transactions = [];
-
         function getLang(key) {
-            return translations[currentLanguage][key] || key;
+            return translations[currentLanguage][key];
         }
 
         function updateUI() {
-            document.getElementById('helloLabel').textContent = getLang('helloLabel');
-            document.getElementById('nameLabel').innerHTML = getLang('nameLabel') + ' <span>▼</span>';
-            document.getElementById('accountTitle').textContent = getLang('accountTitle');
-            document.getElementById('balanceLabel').textContent = getLang('balanceLabel');
-            document.getElementById('balanceAmount').textContent = `R$ ${balance.toFixed(2).replace('.', ',')}`;
-            document.getElementById('limitLabel').textContent = getLang('limitLabel');
-            document.getElementById('limitValue').textContent = getLang('limitValue');
-            document.getElementById('openFinanceLabel').textContent = getLang('openFinanceLabel');
-            document.getElementById('openFinanceValue').textContent = getLang('openFinanceValue');
-            document.getElementById('estatoBtn').textContent = getLang('estatoBtn');
-            document.getElementById('pixLabel').textContent = getLang('pixLabel');
-            document.getElementById('payLabel').textContent = getLang('payLabel');
-            document.getElementById('transferLabel').textContent = getLang('transferLabel');
-            document.getElementById('cardLabel').textContent = getLang('cardLabel');
-            document.getElementById('bannerTitle').textContent = getLang('bannerTitle');
-            document.getElementById('bannerDesc').textContent = getLang('bannerDesc');
-            document.getElementById('bannerBtn').textContent = getLang('bannerBtn');
-            document.getElementById('activitiesTitle').textContent = getLang('activitiesTitle');
-            document.getElementById('filterLabel').textContent = getLang('filterLabel');
-            document.getElementById('pixTitle').textContent = getLang('pixTitle');
-            document.getElementById('selectRecipientLabel').textContent = getLang('selectRecipientLabel');
-            document.getElementById('amountLabel').textContent = getLang('amountLabel');
-            document.getElementById('confirmBtn').textContent = getLang('confirmBtn');
-            document.getElementById('cancelBtn').textContent = getLang('cancelBtn');
-            document.getElementById('successTitle').textContent = getLang('successTitle');
-            document.getElementById('successMsg').textContent = getLang('successMsg');
-            document.getElementById('doneBtn').textContent = getLang('doneBtn');
-            document.getElementById('noTransactionsLabel').textContent = getLang('noTransactionsLabel');
-            
-            renderPixContacts();
-            renderTransactions();
-        }
-
-        function renderPixContacts() {
-            const grid = document.getElementById('pixContactsGrid');
-            grid.innerHTML = mockRecipients.map((r, i) => `
-                <div class="pix-contact ${selectedPixRecipient === i ? 'active' : ''}" onclick="selectPixRecipient(${i})">
-                    <div class="contact-name">${getLang(r.name)}</div>
-                    <div class="contact-type">${r.type}</div>
-                </div>
-            `).join('');
-        }
-
-        function renderTransactions() {
-            const list = document.getElementById('transactionList');
+            updateBalance();
+            updateTransactions();
             const dateLabel = document.getElementById('dateLabel');
-            
+            dateLabel.textContent = translations[currentLanguage].today + ' · ' + new Date().toLocaleDateString('pt-BR', { day: '2-digit', month: 'short' });
+        }
+
+        function updateBalance() {
+            const balanceEl = document.getElementById('balance');
+            if (balanceVisible) {
+                balanceEl.textContent = 'R$ ' + balance.toFixed(2).replace('.', ',');
+            } else {
+                balanceEl.textContent = '••••••••';
+            }
+        }
+
+        function updateTransactions() {
+            const list = document.getElementById('transactionList');
             if (transactions.length === 0) {
-                list.innerHTML = `
-                    <div class="empty-state">
-                        <div class="empty-icon">📋</div>
-                        <p>${getLang('noTransactionsLabel')}</p>
-                    </div>
-                `;
-                dateLabel.textContent = '';
+                list.innerHTML = '<div class="empty-state"><div class="empty-icon">-</div><p>Nenhuma transação</p></div>';
                 return;
             }
 
-            const today = new Date();
-            dateLabel.textContent = today.toLocaleDateString(currentLanguage === 'pt' ? 'pt-BR' : 'en-US', { 
-                day: '2-digit', 
-                month: 'short' 
-            }).replace(/de /g, '');
-
             list.innerHTML = transactions.map(tx => `
-                <div class="transaction-item">
-                    <div class="transaction-info">
-                        <div class="transaction-merchant">${tx.merchant}</div>
-                        <div class="transaction-date">${tx.date}</div>
+                <div class="transaction">
+                    <div class="tx-left">
+                        <div class="tx-merchant">${tx.merchant}</div>
+                        <div class="tx-category">${tx.category} • ${tx.date}</div>
                     </div>
-                    <div class="transaction-amount ${tx.type}">
-                        ${tx.type === 'credit' ? '+' : '-'} R$ ${Math.abs(tx.amount).toFixed(2).replace('.', ',')}
+                    <div class="tx-amount ${tx.amount < 0 ? 'debit' : 'credit'}">
+                        ${tx.amount < 0 ? '' : '+'}R$ ${Math.abs(tx.amount).toFixed(2).replace('.', ',')}
                     </div>
                 </div>
             `).join('');
         }
 
-        function selectPixRecipient(index) {
-            selectedPixRecipient = index;
-            renderPixContacts();
+        function toggleBalance() {
+            balanceVisible = !balanceVisible;
+            updateBalance();
+        }
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'pt' ? 'en' : 'pt';
+            document.getElementById('langBtn').textContent = currentLanguage === 'pt' ? 'EN' : 'PT';
+            updateUI();
         }
 
         function showPixModal() {
             document.getElementById('pixModal').classList.add('active');
-            document.getElementById('pixStep1').classList.remove('hidden');
-            document.getElementById('pixStep2').classList.add('hidden');
+            document.getElementById('pixStep1').style.display = 'block';
+            document.getElementById('pixStep2').style.display = 'none';
+            document.getElementById('pixKey').value = '';
             document.getElementById('pixAmount').value = '';
         }
 
         function closePixModal() {
             document.getElementById('pixModal').classList.remove('active');
-            document.getElementById('pixAmount').value = '';
-            selectedPixRecipient = null;
-            renderPixContacts();
-        }
-
-        function confirmPix() {
-            const pixKey = document.getElementById('pixKey').value.trim();
-            const amount = parseFloat(document.getElementById('pixAmount').value);
-            
-            if (!pixKey) {
-                alert(currentLanguage === 'pt' ? 'Insira uma chave Pix' : 'Enter a Pix key');
-                return;
-            }
-            
-            if (!amount || amount <= 0) {
-                alert(currentLanguage === 'pt' ? 'Insira um valor válido' : 'Enter a valid amount');
-                return;
-            }
-            
-            if (balance === 0) {
-                alert(currentLanguage === 'pt' ? 'Adicione um saldo inicial primeiro!' : 'Add initial balance first!');
-                return;
-            }
-            
-            if (amount > balance) {
-                alert(currentLanguage === 'pt' ? 'Saldo insuficiente' : 'Insufficient balance');
-                return;
-            }
-
-            const mockRecipient = { key: pixKey, bank: 'Banco Destino', ispb: '12345678' };
-            processPix(amount, mockRecipient);
-        }
-
-        function processPix(amount, recipient) {
-            const e2eId = 'E' + new Date().toISOString().slice(2,10).replace(/-/g,'') + Math.random().toString(36).substr(2, 19).toUpperCase();
-            const txId = 'D' + new Date().toISOString().slice(2,10).replace(/-/g,'') + Math.random().toString(36).substr(2, 18).toUpperCase();
-            const timestamp = new Date().toLocaleString(currentLanguage === 'pt' ? 'pt-BR' : 'en-US');
-
-            const receiptHTML = `
-                <div class="receipt-section">
-                    <div class="receipt-section-title">${currentLanguage === 'pt' ? 'Beneficiário' : 'Recipient'}</div>
-                    <div class="receipt-line">
-                        <span>${currentLanguage === 'pt' ? 'Nome:' : 'Name:'}</span>
-                        <strong>${getLang(recipient.name)}</strong>
-                    </div>
-                    <div class="receipt-line">
-                        <span>${currentLanguage === 'pt' ? 'Banco:' : 'Bank:'}</span>
-                        <strong>${recipient.bank}</strong>
-                    </div>
-                    <div class="receipt-line">
-                        <span>${currentLanguage === 'pt' ? 'Chave Pix:' : 'Pix Key:'}</span>
-                        <strong style="font-size: 11px;">${recipient.key}</strong>
-                    </div>
-                </div>
-
-                <div class="receipt-section">
-                    <div class="receipt-section-title">${currentLanguage === 'pt' ? 'Transação' : 'Transaction'}</div>
-                    <div class="receipt-line">
-                        <span>${currentLanguage === 'pt' ? 'Valor:' : 'Amount:'}</span>
-                        <strong>R$ ${amount.toFixed(2).replace('.', ',')}</strong>
-                    </div>
-                    <div class="receipt-line">
-                        <span>${currentLanguage === 'pt' ? 'Data/Hora:' : 'Date/Time:'}</span>
-                        <strong>${timestamp}</strong>
-                    </div>
-                    <div class="receipt-line">
-                        <span>${currentLanguage === 'pt' ? 'Status:' : 'Status:'}</span>
-                        <strong style="color: #28A745;">✓ ${currentLanguage === 'pt' ? 'Completada' : 'Completed'}</strong>
-                    </div>
-                </div>
-
-                <div class="receipt-section">
-                    <div class="receipt-section-title">${currentLanguage === 'pt' ? 'Dados PSP' : 'PSP Data'}</div>
-                    <div class="receipt-line">
-                        <span>${currentLanguage === 'pt' ? 'ID E2E:' : 'E2E ID:'}</span>
-                        <strong style="font-size: 11px;">${e2eId}</strong>
-                    </div>
-                    <div class="receipt-line">
-                        <span>${currentLanguage === 'pt' ? 'ID Transação:' : 'Tx ID:'}</span>
-                        <strong style="font-size: 11px;">${txId}</strong>
-                    </div>
-                    <div class="receipt-line">
-                        <span>${currentLanguage === 'pt' ? 'ISPB Beneficiário:' : 'Beneficiary ISPB:'}</span>
-                        <strong>${recipient.ispb}</strong>
-                    </div>
-                    <div class="receipt-line">
-                        <span>${currentLanguage === 'pt' ? 'Liquidação:' : 'Settlement:'}</span>
-                        <strong>~2,5 segundos / seconds</strong>
-                    </div>
-                </div>
-            `;
-
-            document.getElementById('pixReceipt').innerHTML = receiptHTML;
-            balance -= amount;
-            document.getElementById('balanceAmount').textContent = `R$ ${balance.toFixed(2).replace('.', ',')}`;
-            
-            // Adiciona transação ao histórico
-            const txDate = new Date().toLocaleTimeString(currentLanguage === 'pt' ? 'pt-BR' : 'en-US', {
-                hour: '2-digit',
-                minute: '2-digit'
-            });
-            
-            transactions.unshift({
-                merchant: `${currentLanguage === 'pt' ? 'Pix para ' : 'Pix to '} ${recipient.key}`,
-                amount: amount,
-                date: txDate,
-                type: 'debit'
-            });
-
-            saveToLocalStorage();
-            
-            document.getElementById('pixStep1').classList.add('hidden');
-            document.getElementById('pixStep2').classList.remove('hidden');
-        }
-
-        function closeBothModals() {
-            closePixModal();
-            renderTransactions();
-        }
-
-        function toggleLanguage() {
-            currentLanguage = currentLanguage === 'pt' ? 'en' : 'pt';
-            document.getElementById('langBtn').textContent = currentLanguage === 'pt' ? 'PT' : 'EN';
-            localStorage.setItem('language', currentLanguage);
-            updateUI();
-        }
-
-        function toggleBalance() {
-            const el = document.getElementById('balanceAmount');
-            el.textContent = el.textContent === `R$ ${balance.toFixed(2).replace('.', ',')}` ? '****' : `R$ ${balance.toFixed(2).replace('.', ',')}`;
-        }
-
-        function showPayBillsModal() {
-            renderBills();
-            document.getElementById('payBillsModal').classList.add('active');
-        }
-
-        function closePayBillsModal() {
-            document.getElementById('payBillsModal').classList.remove('active');
         }
 
         function showTransferModal() {
@@ -1321,15 +882,9 @@
 
         function closeTransferModal() {
             document.getElementById('transferModal').classList.remove('active');
-            document.getElementById('transferBank').value = '';
-            document.getElementById('transferAgency').value = '';
-            document.getElementById('transferAccount').value = '';
-            document.getElementById('transferHolder').value = '';
-            document.getElementById('transferAmount').value = '';
         }
 
         function showCardModal() {
-            renderCardInfo();
             document.getElementById('cardModal').classList.add('active');
         }
 
@@ -1337,180 +892,189 @@
             document.getElementById('cardModal').classList.remove('active');
         }
 
-        function filterTransactions() {
-            alert(getLang('comingSoon'));
+        function showPayModal() {
+            renderBills();
+            document.getElementById('payModal').classList.add('active');
         }
 
-        function renderBills() {
-            const mockBills = [
-                { name: 'Energia Elétrica / Electric Bill', amount: 185.50, dueDate: '15 Jan', status: 'pending' },
-                { name: 'Internet / Internet', amount: 99.90, dueDate: '10 Jan', status: 'paid' },
-                { name: 'Água / Water', amount: 65.30, dueDate: '20 Jan', status: 'pending' },
-                { name: 'Seguro / Insurance', amount: 320.00, dueDate: '05 Jan', status: 'paid' },
-                { name: 'Netflix', amount: 59.90, dueDate: '25 Jan', status: 'pending' },
-                { name: 'Gym / Academia', amount: 129.90, dueDate: '01 Jan', status: 'paid' }
-            ];
-
-            const billsList = document.getElementById('billsList');
-            billsList.innerHTML = mockBills.map(bill => `
-                <div class="bill-item ${bill.status}" onclick="payBill('${bill.name}', ${bill.amount})">
-                    <div class="bill-name">${bill.name}</div>
-                    <div style="display: flex; justify-content: space-between; align-items: center;">
-                        <div class="bill-amount">-R$ ${bill.amount.toFixed(2).replace('.', ',')}</div>
-                        <div style="text-align: right;">
-                            <div class="bill-status ${bill.status}">${bill.status === 'pending' ? currentLanguage === 'pt' ? 'Pendente' : 'Pending' : currentLanguage === 'pt' ? 'Pago' : 'Paid'}</div>
-                            <div class="bill-date">${bill.dueDate}</div>
-                        </div>
-                    </div>
-                </div>
-            `).join('');
+        function closePayModal() {
+            document.getElementById('payModal').classList.remove('active');
         }
 
-        function payBill(billName, amount) {
-            if (confirm((currentLanguage === 'pt' ? 'Confirmar pagamento de ' : 'Confirm payment of ') + billName + '?')) {
-                if (amount <= balance) {
-                    balance -= amount;
-                    saveToLocalStorage();
-                    renderBills();
-                    updateUI();
-                    alert((currentLanguage === 'pt' ? 'Conta paga com sucesso!' : 'Bill paid successfully!'));
-                } else {
-                    alert(currentLanguage === 'pt' ? 'Saldo insuficiente' : 'Insufficient balance');
-                }
-            }
-        }
-
-        function confirmTransfer() {
-            const bank = document.getElementById('transferBank').value;
-            const agency = document.getElementById('transferAgency').value;
-            const account = document.getElementById('transferAccount').value;
-            const holder = document.getElementById('transferHolder').value;
-            const amount = parseFloat(document.getElementById('transferAmount').value);
-
-            if (!bank || !agency || !account || !holder || !amount || amount <= 0) {
-                alert(currentLanguage === 'pt' ? 'Preencha todos os campos' : 'Fill all fields');
-                return;
-            }
-
-            if (amount > balance) {
-                alert(currentLanguage === 'pt' ? 'Saldo insuficiente' : 'Insufficient balance');
-                return;
-            }
-
-            if (confirm((currentLanguage === 'pt' ? 'Transferir R$ ' : 'Transfer R$ ') + amount.toFixed(2) + ' para ' + holder + '?')) {
-                balance -= amount;
-                transactions.unshift({
-                    merchant: `${currentLanguage === 'pt' ? 'Transferência para ' : 'Transfer to '} ${holder}`,
-                    amount: amount,
-                    date: new Date().toLocaleTimeString(currentLanguage === 'pt' ? 'pt-BR' : 'en-US', { hour: '2-digit', minute: '2-digit' }),
-                    type: 'debit'
-                });
-                saveToLocalStorage();
-                updateUI();
-                closeTransferModal();
-                alert(currentLanguage === 'pt' ? 'Transferência realizada!' : 'Transfer completed!');
-            }
-        }
-
-        function renderCardInfo() {
-            const cardStats = document.getElementById('cardStats');
-            cardStats.innerHTML = `
-                <div class="card-info-row">
-                    <span>${currentLanguage === 'pt' ? 'Limite Total' : 'Total Limit'}</span>
-                    <strong>R$ 15.000,00</strong>
-                </div>
-                <div class="card-info-row">
-                    <span>${currentLanguage === 'pt' ? 'Disponível' : 'Available'}</span>
-                    <strong>R$ 12.340,50</strong>
-                </div>
-                <div class="card-info-row">
-                    <span>${currentLanguage === 'pt' ? 'Fatura Aberta' : 'Open Invoice'}</span>
-                    <strong>R$ 2.659,50</strong>
-                </div>
-                <div class="card-info-row">
-                    <span>${currentLanguage === 'pt' ? 'Vencimento' : 'Due Date'}</span>
-                    <strong>10 de Fevereiro</strong>
-                </div>
-            `;
-        }
-
-        function blockCard() {
-            if (confirm(currentLanguage === 'pt' ? 'Bloquear cartão?' : 'Block card?')) {
-                alert(currentLanguage === 'pt' ? 'Cartão bloqueado com sucesso!' : 'Card blocked successfully!');
-                closeCardModal();
-            }
+        function showProfile() {
+            alert('Perfil em desenvolvimento');
         }
 
         function showPixSuggestions() {
-            const input = document.getElementById('pixKey').value;
-            const box = document.getElementById('suggestionsBox');
-            const suggestions = document.getElementById('quickSuggestions');
+            const input = document.getElementById('pixKey').value.trim().toLowerCase();
+            const box = document.getElementById('pixSuggestions');
 
             if (input.length === 0) {
-                box.style.display = 'none';
+                box.classList.remove('active');
                 return;
             }
 
-            const mockPixKeys = [
-                { key: '123.456.789-00', name: 'João Silva', bank: 'Nubank' },
-                { key: 'maria@email.com', name: 'Maria Santos', bank: 'Itaú' },
-                { key: '(11) 98765-4321', name: 'Pedro Lima', bank: 'Bradesco' },
-                { key: 'uuid-a7c3f2e8-b1d9', name: 'Ana Costa', bank: 'Caixa' }
+            const mockKeys = [
+                { name: 'João Silva', key: '123.456.789-00' },
+                { name: 'Maria Santos', key: 'maria@email.com' },
+                { name: 'Pedro Lima', key: '(11) 98765-4321' },
+                { name: 'Ana Costa', key: 'uuid-a7c3f2e8-b1d9' }
             ];
 
-            const filtered = mockPixKeys.filter(p => 
-                p.key.toLowerCase().includes(input.toLowerCase()) || 
-                p.name.toLowerCase().includes(input.toLowerCase())
-            );
+            const filtered = mockKeys.filter(k => k.key.includes(input) || k.name.toLowerCase().includes(input));
 
             if (filtered.length > 0) {
-                suggestions.innerHTML = filtered.map(f => `
-                    <div class="quick-suggestion" onclick="setPixKey('${f.key}', '${f.name}')">
-                        <div style="font-weight: 600;">${f.name}</div>
-                        <div style="font-size: 11px; color: #999;">${f.key} • ${f.bank}</div>
+                box.innerHTML = filtered.map(k => `
+                    <div class="suggestion-item" onclick="setPixKey('${k.key}', '${k.name}')">
+                        <div class="suggestion-name">${k.name}</div>
+                        <div class="suggestion-key">${k.key}</div>
                     </div>
                 `).join('');
-                box.style.display = 'block';
+                box.classList.add('active');
             } else {
-                box.style.display = 'none';
+                box.classList.remove('active');
             }
         }
 
         function setPixKey(key, name) {
             document.getElementById('pixKey').value = key;
-            document.getElementById('suggestionsBox').style.display = 'none';
+            document.getElementById('pixSuggestions').classList.remove('active');
         }
 
-        function saveToLocalStorage() {
-            const data = {
-                balance: balance,
-                transactions: transactions,
-                language: currentLanguage
-            };
-            localStorage.setItem('bancoMockData', JSON.stringify(data));
-        }
+        function confirmPix() {
+            const pixKey = document.getElementById('pixKey').value.trim();
+            const amount = parseFloat(document.getElementById('pixAmount').value);
 
-        function loadFromLocalStorage() {
-            const saved = localStorage.getItem('bancoMockData');
-            if (saved) {
-                const data = JSON.parse(saved);
-                balance = data.balance || 0;
-                transactions = data.transactions || [];
-                currentLanguage = data.language || 'pt';
-            } else {
-                // Prompt para saldo inicial
-                const initialBalance = prompt(currentLanguage === 'pt' ? 'Digite seu saldo inicial (R$):' : 'Enter your initial balance (R$):', '1000');
-                if (initialBalance && parseFloat(initialBalance) > 0) {
-                    balance = parseFloat(initialBalance);
-                    saveToLocalStorage();
-                }
+            if (!pixKey || !amount || amount <= 0) {
+                alert(getLang('fillAllFields'));
+                return;
             }
+
+            if (amount > balance) {
+                alert(getLang('insufficientBalance'));
+                return;
+            }
+
+            balance -= amount;
+            transactions.unshift({
+                merchant: 'Pix para ' + pixKey,
+                category: 'Transferência',
+                amount: -amount,
+                date: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+            });
+
+            const receiptHTML = `
+                <div class="receipt-section">
+                    <div class="receipt-section-title">Beneficiário</div>
+                    <div class="receipt-line">
+                        <span>Chave:</span>
+                        <strong style="font-size: 11px;">${pixKey}</strong>
+                    </div>
+                </div>
+                <div class="receipt-section">
+                    <div class="receipt-section-title">Transação</div>
+                    <div class="receipt-line">
+                        <span>Valor:</span>
+                        <strong>R$ ${amount.toFixed(2).replace('.', ',')}</strong>
+                    </div>
+                    <div class="receipt-line">
+                        <span>Data/Hora:</span>
+                        <strong>${new Date().toLocaleString('pt-BR')}</strong>
+                    </div>
+                    <div class="receipt-line">
+                        <span>Status:</span>
+                        <strong style="color: #10B981;">Concluída</strong>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('pixReceipt').innerHTML = receiptHTML;
+            document.getElementById('pixStep1').style.display = 'none';
+            document.getElementById('pixStep2').style.display = 'block';
+            updateUI();
+        }
+
+        function confirmTransfer() {
+            const bank = document.getElementById('bankName').value.trim();
+            const agency = document.getElementById('agency').value.trim();
+            const account = document.getElementById('account').value.trim();
+            const holder = document.getElementById('holder').value.trim();
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+
+            if (!bank || !agency || !account || !holder || !amount || amount <= 0) {
+                alert(getLang('fillAllFields'));
+                return;
+            }
+
+            if (amount > balance) {
+                alert(getLang('insufficientBalance'));
+                return;
+            }
+
+            balance -= amount;
+            transactions.unshift({
+                merchant: 'Transferência para ' + holder,
+                category: 'Transferência',
+                amount: -amount,
+                date: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+            });
+
+            updateUI();
+            closeTransferModal();
+            alert(getLang('transferSuccess'));
+        }
+
+        function renderBills() {
+            const mockBills = [
+                { name: 'Energia Elétrica', amount: 185.50, dueDate: '15 Jan', status: 'pending' },
+                { name: 'Internet', amount: 99.90, dueDate: '10 Jan', status: 'paid' },
+                { name: 'Água', amount: 65.30, dueDate: '20 Jan', status: 'pending' },
+                { name: 'Seguro', amount: 320.00, dueDate: '05 Jan', status: 'paid' },
+                { name: 'Telefone', amount: 89.90, dueDate: '12 Jan', status: 'pending' },
+                { name: 'Academia', amount: 129.90, dueDate: '01 Jan', status: 'paid' }
+            ];
+
+            const billsList = document.getElementById('billsList');
+            billsList.innerHTML = mockBills.map(bill => `
+                <div style="padding: 16px 0; border-bottom: 1px solid #f0f0f0; display: flex; justify-content: space-between; align-items: center; cursor: pointer;" onclick="payBill('${bill.name}', ${bill.amount})">
+                    <div>
+                        <div style="font-weight: 600; font-size: 14px; margin-bottom: 4px;">${bill.name}</div>
+                        <div style="font-size: 12px; color: #999;">${bill.dueDate}</div>
+                    </div>
+                    <div style="text-align: right;">
+                        <div style="font-weight: 700; color: ${bill.status === 'pending' ? '#EF4444' : '#10B981'};">R$ ${bill.amount.toFixed(2).replace('.', ',')}</div>
+                        <div style="font-size: 11px; color: #999; margin-top: 4px;">${bill.status === 'pending' ? 'Pendente' : 'Pago'}</div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function payBill(name, amount) {
+            if (amount > balance) {
+                alert(getLang('insufficientBalance'));
+                return;
+            }
+
+            balance -= amount;
+            transactions.unshift({
+                merchant: 'Pagamento: ' + name,
+                category: 'Fatura',
+                amount: -amount,
+                date: new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })
+            });
+
+            updateUI();
+            closePayModal();
+            alert(getLang('paymentSuccess'));
+        }
+
+        function closeBothModals() {
+            closePixModal();
+            updateUI();
         }
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            loadFromLocalStorage();
-            document.getElementById('langBtn').textContent = currentLanguage === 'pt' ? 'PT' : 'EN';
             updateUI();
         });
     </script>
