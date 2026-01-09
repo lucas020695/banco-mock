@@ -1,0 +1,970 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <title>Banco Mock</title>
+    <meta name="theme-color" content="#0047A8">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="manifest" href="data:application/manifest+json,{%22name%22:%22Banco%20Mock%22,%22short_name%22:%22BancoMock%22,%22start_url%22:%22.%22,%22display%22:%22standalone%22,%22background_color%22:%22%230047A8%22,%22theme_color%22:%22%230047A8%22}">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        html, body {
+            height: 100%;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(180deg, #0047A8 0%, #002B6A 100%);
+            color: white;
+        }
+
+        .app {
+            height: 100vh;
+            overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            padding-top: env(safe-area-inset-top);
+            padding-bottom: env(safe-area-inset-bottom);
+        }
+
+        .header {
+            background: #0047A8;
+            padding: 16px 16px 12px;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            backdrop-filter: blur(10px);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 14px;
+            backdrop-filter: blur(10px);
+        }
+
+        .greeting {
+            flex: 1;
+        }
+
+        .greeting small {
+            font-size: 12px;
+            opacity: 0.9;
+            display: block;
+        }
+
+        .greeting strong {
+            font-size: 16px;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .lang-toggle {
+            width: 40px;
+            height: 40px;
+            border-radius: 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            font-size: 18px;
+            transition: all 0.2s;
+        }
+
+        .lang-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        /* Card conta */
+        .account-card {
+            margin: 20px 16px 16px;
+            padding: 24px 20px;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .account-title {
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .balance-row {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .balance-label {
+            font-size: 12px;
+            opacity: 0.8;
+            margin-bottom: 4px;
+        }
+
+        .balance-amount {
+            font-size: 28px;
+            font-weight: 800;
+        }
+
+        .balance-toggle {
+            width: 28px;
+            height: 28px;
+            background: none;
+            border: none;
+            color: white;
+            opacity: 0.7;
+            cursor: pointer;
+            font-size: 20px;
+            transition: opacity 0.2s;
+        }
+
+        .balance-toggle:hover {
+            opacity: 1;
+        }
+
+        .account-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 13px;
+            opacity: 0.8;
+            margin-bottom: 20px;
+        }
+
+        .account-details strong {
+            opacity: 1;
+            font-weight: 600;
+        }
+
+        .extrato-btn {
+            background: rgba(255, 255, 255, 0.15);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .extrato-btn:hover {
+            background: rgba(255, 255, 255, 0.25);
+        }
+
+        /* Ações */
+        .actions {
+            display: flex;
+            justify-content: space-around;
+            background: rgba(14, 92, 207, 0.8);
+            margin: 0 16px 20px;
+            padding: 16px;
+            border-radius: 20px;
+            backdrop-filter: blur(20px);
+        }
+
+        .action {
+            text-align: center;
+            cursor: pointer;
+            padding: 12px 8px;
+            border-radius: 16px;
+            transition: all 0.2s;
+            background: none;
+            border: none;
+            color: white;
+            flex: 1;
+        }
+
+        .action:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .action-icon {
+            width: 32px;
+            height: 32px;
+            display: block;
+            margin: 0 auto 6px;
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+        }
+
+        .action-label {
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        /* SVG Icons */
+        .icon-pix {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M3 3h6v6H3V3m0 9h6v6H3v-6m9-9h6v6h-6V3m0 9h6v6h-6v-6" stroke="white" stroke-width="0.5" fill="white"/></svg>');
+        }
+
+        .icon-pay {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M18 6H6c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2zm-1 11h-8v-2h8v2zm4-7H3V8h18v2z" fill="white"/></svg>');
+        }
+
+        .icon-transfer {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M16 8.41L7.41 17 6 15.59 14.59 7 16 8.41zM8 17h10v2H8z" fill="white"/><path d="M16 3l4 4-4 4V7H2v6h2V9h12V3z" fill="white"/></svg>');
+        }
+
+        .icon-card {
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="white"><path d="M20 8H4V4h16m0 12H4c-1.1 0-2 .9-2 2v4h20v-4c0-1.1-.9-2-2-2m-1-5H5v2h14V7z" fill="white"/></svg>');
+        }
+
+        /* Banner */
+        .banner {
+            margin: 0 16px 20px;
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            color: #0047A8;
+        }
+
+        .banner h3 {
+            font-size: 16px;
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .banner p {
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 16px;
+        }
+
+        .banner-btn {
+            background: #0047A8;
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 25px;
+            font-weight: 600;
+            cursor: pointer;
+            width: 100%;
+            transition: all 0.2s;
+        }
+
+        .banner-btn:hover {
+            background: #003580;
+            transform: translateY(-2px);
+        }
+
+        /* Atividades */
+        .activities {
+            margin: 0 16px 100px;
+            background: white;
+            border-radius: 20px;
+            padding: 24px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+            color: #333;
+        }
+
+        .activities-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+
+        .activities-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .filter-btn {
+            color: #0047A8;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+            background: none;
+            border: none;
+        }
+
+        .date {
+            font-size: 13px;
+            color: #999;
+            margin-bottom: 16px;
+        }
+
+        .activity {
+            padding: 20px;
+            background: #F8FAFF;
+            border-radius: 16px;
+            margin-bottom: 12px;
+            cursor: pointer;
+            border-left: 4px solid #0047A8;
+            transition: all 0.2s;
+        }
+
+        .activity:hover {
+            background: #E3F2FD;
+        }
+
+        .activity-title {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .activity-desc {
+            color: #666;
+            font-size: 14px;
+        }
+
+        /* Modal */
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            z-index: 2000;
+            padding: 20px;
+            align-items: flex-end;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: white;
+            border-radius: 24px 24px 0 0;
+            padding: 32px 24px;
+            max-height: 85vh;
+            overflow-y: auto;
+            width: 100%;
+            color: #333;
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+        }
+
+        .modal-header h2 {
+            font-size: 20px;
+            font-weight: 700;
+        }
+
+        .close-modal {
+            background: none;
+            border: none;
+            font-size: 28px;
+            cursor: pointer;
+            color: #999;
+            transition: color 0.2s;
+        }
+
+        .close-modal:hover {
+            color: #333;
+        }
+
+        /* Pix Grid */
+        .pix-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 24px;
+        }
+
+        .pix-contact {
+            padding: 20px;
+            border: 2px solid #E3F2FD;
+            border-radius: 16px;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: white;
+        }
+
+        .pix-contact:hover {
+            border-color: #0047A8;
+        }
+
+        .pix-contact.active {
+            border-color: #0047A8;
+            background: #E3F2FD;
+        }
+
+        .contact-name {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .contact-type {
+            font-size: 12px;
+            color: #666;
+        }
+
+        /* Form */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 16px;
+            border: 2px solid #E0E0E0;
+            border-radius: 12px;
+            font-size: 16px;
+            font-family: inherit;
+            color: #333;
+            transition: all 0.2s;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #0047A8;
+            box-shadow: 0 0 0 3px rgba(0, 71, 168, 0.1);
+        }
+
+        /* Buttons */
+        .pix-confirm {
+            width: 100%;
+            padding: 18px;
+            background: #0047A8;
+            color: white;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-bottom: 12px;
+        }
+
+        .pix-confirm:hover {
+            background: #003580;
+            transform: translateY(-2px);
+        }
+
+        .cancel-btn {
+            width: 100%;
+            padding: 18px;
+            background: #F0F0F0;
+            color: #333;
+            border: none;
+            border-radius: 16px;
+            font-size: 16px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .cancel-btn:hover {
+            background: #E0E0E0;
+        }
+
+        /* Receipt */
+        .receipt {
+            background: linear-gradient(135deg, #D4EDDA 0%, #C3E6CB 100%);
+            border-radius: 20px;
+            padding: 24px;
+            margin: 24px 0;
+            text-align: center;
+        }
+
+        .checkmark-large {
+            font-size: 64px;
+            color: #28A745;
+            margin-bottom: 16px;
+        }
+
+        .receipt-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #28A745;
+            margin-bottom: 16px;
+        }
+
+        .receipt-content {
+            background: white;
+            padding: 20px;
+            border-radius: 16px;
+            text-align: left;
+            font-size: 13px;
+            line-height: 1.8;
+            font-family: monospace;
+            margin-bottom: 16px;
+        }
+
+        .receipt-line {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .receipt-line:last-child {
+            border-bottom: none;
+        }
+
+        .receipt-section {
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 1px dashed #ccc;
+        }
+
+        .receipt-section:last-child {
+            border-bottom: none;
+        }
+
+        .receipt-section-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: #28A745;
+        }
+
+        .hidden {
+            display: none !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="app">
+        <!-- HEADER -->
+        <div class="header">
+            <div class="header-left">
+                <div class="avatar">LO</div>
+                <div class="greeting">
+                    <small id="helloLabel">Olá,</small>
+                    <strong id="nameLabel">Lucas <span>▼</span></strong>
+                </div>
+            </div>
+            <button class="lang-toggle" onclick="toggleLanguage()" title="Toggle Language">🇧🇷</button>
+        </div>
+
+        <!-- CONTA CORRENTE -->
+        <div class="account-card">
+            <div class="account-title" id="accountTitle">Conta corrente</div>
+
+            <div class="balance-row">
+                <div>
+                    <div class="balance-label" id="balanceLabel">Saldo atual</div>
+                    <div class="balance-amount" id="balanceAmount">R$ 12.450,82</div>
+                </div>
+                <button class="balance-toggle" onclick="toggleBalance()" title="Show/Hide">👁️</button>
+            </div>
+
+            <div class="account-details">
+                <span id="limitLabel">Limite da conta</span>
+                <span><strong id="limitValue">Ver detalhes</strong></span>
+            </div>
+            <div class="account-details">
+                <span id="openFinanceLabel">Saldo Open Finance</span>
+                <span><strong id="openFinanceValue">R$ 0,00</strong></span>
+            </div>
+
+            <button class="extrato-btn" onclick="alert(getLang('statementMsg'))" id="estatoBtn">Ver extrato</button>
+        </div>
+
+        <!-- AÇÕES -->
+        <div class="actions">
+            <button class="action" onclick="showPixModal()">
+                <div class="action-icon icon-pix"></div>
+                <div class="action-label" id="pixLabel">Pix</div>
+            </button>
+            <button class="action" onclick="showPayModal()">
+                <div class="action-icon icon-pay"></div>
+                <div class="action-label" id="payLabel">Pagar</div>
+            </button>
+            <button class="action" onclick="showTransferModal()">
+                <div class="action-icon icon-transfer"></div>
+                <div class="action-label" id="transferLabel">Transferir</div>
+            </button>
+            <button class="action" onclick="showCardModal()">
+                <div class="action-icon icon-card"></div>
+                <div class="action-label" id="cardLabel">Cartão</div>
+            </button>
+        </div>
+
+        <!-- BANNER -->
+        <div class="banner">
+            <h3 id="bannerTitle">Use Pix para transferências instantâneas</h3>
+            <p id="bannerDesc">Rápido, seguro e disponível 24h. Sem taxas para pessoas físicas.</p>
+            <button class="banner-btn" onclick="showPixModal()" id="bannerBtn">Começar Pix</button>
+        </div>
+
+        <!-- ATIVIDADES -->
+        <div class="activities">
+            <div class="activities-header">
+                <h3 id="activitiesTitle">Atividades</h3>
+                <button class="filter-btn" onclick="alert(getLang('comingSoon'))" id="filterBtn">
+                    🗂️ <span id="filterLabel">Filtro</span>
+                </button>
+            </div>
+            <div class="date" id="dateLabel">Hoje · 09 Jan</div>
+            <div class="activity" onclick="alert(getLang('limitDetail'))">
+                <div class="activity-title" id="activityTitle">Limite da conta não pode ser ativado</div>
+                <div class="activity-desc" id="activityDesc">Toque para ver o que precisa ajustar no seu limite.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- MODAL PIX -->
+    <div id="pixModal" class="modal">
+        <div class="modal-content">
+            <div id="pixStep1" class="hidden">
+                <div class="modal-header">
+                    <h2 id="pixTitle">Enviar Pix</h2>
+                    <button class="close-modal" onclick="closePixModal()">×</button>
+                </div>
+
+                <div class="form-group">
+                    <label id="selectRecipientLabel">Selecione o Beneficiário</label>
+                    <div class="pix-grid" id="pixContactsGrid"></div>
+                </div>
+
+                <div class="form-group">
+                    <label id="amountLabel">Valor</label>
+                    <div style="display: flex; gap: 8px;">
+                        <span style="padding: 16px; color: #999; font-weight: 600;">R$</span>
+                        <input type="number" id="pixAmount" placeholder="0,00" step="0.01" min="0">
+                    </div>
+                </div>
+
+                <button class="pix-confirm" onclick="confirmPix()" id="confirmBtn">Confirmar Pix</button>
+                <button class="cancel-btn" onclick="closePixModal()" id="cancelBtn">Cancelar</button>
+            </div>
+
+            <div id="pixStep2" class="hidden">
+                <div class="receipt">
+                    <div class="checkmark-large">✅</div>
+                    <div class="receipt-title" id="successTitle">Pix Enviado com Sucesso!</div>
+                    <p id="successMsg" style="color: #28A745; margin-bottom: 16px;">Seu Pix foi processado instantaneamente.</p>
+                </div>
+
+                <div class="receipt-content" id="pixReceipt"></div>
+
+                <button class="pix-confirm" onclick="closeBothModals()" id="doneBtn">Voltar ao Dashboard</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Translations
+        const translations = {
+            pt: {
+                helloLabel: 'Olá,',
+                nameLabel: 'Lucas',
+                accountTitle: 'Conta corrente',
+                balanceLabel: 'Saldo atual',
+                limitLabel: 'Limite da conta',
+                limitValue: 'Ver detalhes',
+                openFinanceLabel: 'Saldo Open Finance',
+                openFinanceValue: 'R$ 0,00',
+                estatoBtn: 'Ver extrato',
+                pixLabel: 'Pix',
+                payLabel: 'Pagar',
+                transferLabel: 'Transferir',
+                cardLabel: 'Cartão',
+                bannerTitle: 'Use Pix para transferências instantâneas',
+                bannerDesc: 'Rápido, seguro e disponível 24h. Sem taxas para pessoas físicas.',
+                bannerBtn: 'Começar Pix',
+                activitiesTitle: 'Atividades',
+                filterLabel: 'Filtro',
+                dateLabel: 'Hoje · 09 Jan',
+                activityTitle: 'Limite da conta não pode ser ativado',
+                activityDesc: 'Toque para ver o que precisa ajustar no seu limite.',
+                pixTitle: 'Enviar Pix',
+                selectRecipientLabel: 'Selecione o Beneficiário',
+                amountLabel: 'Valor',
+                confirmBtn: 'Confirmar Pix',
+                cancelBtn: 'Cancelar',
+                successTitle: 'Pix Enviado com Sucesso!',
+                successMsg: 'Seu Pix foi processado instantaneamente.',
+                doneBtn: 'Voltar ao Dashboard',
+                statementMsg: '📊 Extrato mock carregado!',
+                comingSoon: '🔄 Esta funcionalidade em breve!',
+                limitDetail: '📋 Detalhes do limite da sua conta.',
+                joao: 'João Silva',
+                maria: 'Maria Santos',
+                pedro: 'Pedro Lima',
+                ana: 'Ana Costa'
+            },
+            en: {
+                helloLabel: 'Hi,',
+                nameLabel: 'Lucas',
+                accountTitle: 'Checking Account',
+                balanceLabel: 'Available Balance',
+                limitLabel: 'Account Limit',
+                limitValue: 'View Details',
+                openFinanceLabel: 'Open Finance Balance',
+                openFinanceValue: 'R$ 0.00',
+                estatoBtn: 'View Statement',
+                pixLabel: 'Pix',
+                payLabel: 'Pay',
+                transferLabel: 'Transfer',
+                cardLabel: 'Card',
+                bannerTitle: 'Use Pix for instant transfers',
+                bannerDesc: 'Fast, secure and available 24h. No fees for individuals.',
+                bannerBtn: 'Start Pix',
+                activitiesTitle: 'Activities',
+                filterLabel: 'Filter',
+                dateLabel: 'Today · Jan 09',
+                activityTitle: 'Account limit cannot be activated',
+                activityDesc: 'Tap to see what you need to adjust on your limit.',
+                pixTitle: 'Send Pix',
+                selectRecipientLabel: 'Select Recipient',
+                amountLabel: 'Amount',
+                confirmBtn: 'Confirm Pix',
+                cancelBtn: 'Cancel',
+                successTitle: 'Pix Sent Successfully!',
+                successMsg: 'Your Pix was processed instantly.',
+                doneBtn: 'Back to Dashboard',
+                statementMsg: '📊 Mock statement loaded!',
+                comingSoon: '🔄 This feature coming soon!',
+                limitDetail: '📋 Details about your account limit.',
+                joao: 'John Smith',
+                maria: 'Maria Santos',
+                pedro: 'Peter Lima',
+                ana: 'Anna Costa'
+            }
+        };
+
+        const mockRecipients = [
+            { name: 'joao', key: '123.456.789-00', type: 'CPF', bank: 'Nubank', ispb: '18236120' },
+            { name: 'maria', key: 'maria@email.com', type: 'Email', bank: 'Itaú', ispb: '60701190' },
+            { name: 'pedro', key: '(11) 98765-4321', type: 'Telefone', bank: 'Bradesco', ispb: '60746948' },
+            { name: 'ana', key: 'a7c3f2e8-b1d9-4e6a-9c2f-7b8a1d3e5f9a', type: 'Chave Aleatória', bank: 'Caixa', ispb: '00360305' }
+        ];
+
+        let currentLanguage = 'pt';
+        let selectedPixRecipient = null;
+        let balance = 12450.82;
+
+        function getLang(key) {
+            return translations[currentLanguage][key] || key;
+        }
+
+        function updateUI() {
+            document.getElementById('helloLabel').textContent = getLang('helloLabel');
+            document.getElementById('nameLabel').innerHTML = getLang('nameLabel') + ' <span>▼</span>';
+            document.getElementById('accountTitle').textContent = getLang('accountTitle');
+            document.getElementById('balanceLabel').textContent = getLang('balanceLabel');
+            document.getElementById('limitLabel').textContent = getLang('limitLabel');
+            document.getElementById('limitValue').textContent = getLang('limitValue');
+            document.getElementById('openFinanceLabel').textContent = getLang('openFinanceLabel');
+            document.getElementById('openFinanceValue').textContent = getLang('openFinanceValue');
+            document.getElementById('estatoBtn').textContent = getLang('estatoBtn');
+            document.getElementById('pixLabel').textContent = getLang('pixLabel');
+            document.getElementById('payLabel').textContent = getLang('payLabel');
+            document.getElementById('transferLabel').textContent = getLang('transferLabel');
+            document.getElementById('cardLabel').textContent = getLang('cardLabel');
+            document.getElementById('bannerTitle').textContent = getLang('bannerTitle');
+            document.getElementById('bannerDesc').textContent = getLang('bannerDesc');
+            document.getElementById('bannerBtn').textContent = getLang('bannerBtn');
+            document.getElementById('activitiesTitle').textContent = getLang('activitiesTitle');
+            document.getElementById('filterLabel').textContent = getLang('filterLabel');
+            document.getElementById('dateLabel').textContent = getLang('dateLabel');
+            document.getElementById('activityTitle').textContent = getLang('activityTitle');
+            document.getElementById('activityDesc').textContent = getLang('activityDesc');
+            document.getElementById('pixTitle').textContent = getLang('pixTitle');
+            document.getElementById('selectRecipientLabel').textContent = getLang('selectRecipientLabel');
+            document.getElementById('amountLabel').textContent = getLang('amountLabel');
+            document.getElementById('confirmBtn').textContent = getLang('confirmBtn');
+            document.getElementById('cancelBtn').textContent = getLang('cancelBtn');
+            document.getElementById('successTitle').textContent = getLang('successTitle');
+            document.getElementById('successMsg').textContent = getLang('successMsg');
+            document.getElementById('doneBtn').textContent = getLang('doneBtn');
+            
+            renderPixContacts();
+        }
+
+        function renderPixContacts() {
+            const grid = document.getElementById('pixContactsGrid');
+            grid.innerHTML = mockRecipients.map((r, i) => `
+                <div class="pix-contact ${selectedPixRecipient === i ? 'active' : ''}" onclick="selectPixRecipient(${i})">
+                    <div class="contact-name">${getLang(r.name)}</div>
+                    <div class="contact-type">${r.type}</div>
+                </div>
+            `).join('');
+        }
+
+        function selectPixRecipient(index) {
+            selectedPixRecipient = index;
+            renderPixContacts();
+        }
+
+        function showPixModal() {
+            document.getElementById('pixModal').classList.add('active');
+            document.getElementById('pixStep1').classList.remove('hidden');
+            document.getElementById('pixStep2').classList.add('hidden');
+        }
+
+        function closePixModal() {
+            document.getElementById('pixModal').classList.remove('active');
+            document.getElementById('pixAmount').value = '';
+            selectedPixRecipient = null;
+            renderPixContacts();
+        }
+
+        function confirmPix() {
+            const amount = parseFloat(document.getElementById('pixAmount').value);
+            
+            if (selectedPixRecipient === null) {
+                alert(currentLanguage === 'pt' ? 'Selecione um beneficiário' : 'Select a recipient');
+                return;
+            }
+            
+            if (!amount || amount <= 0) {
+                alert(currentLanguage === 'pt' ? 'Insira um valor válido' : 'Enter a valid amount');
+                return;
+            }
+            
+            if (amount > balance) {
+                alert(currentLanguage === 'pt' ? 'Saldo insuficiente' : 'Insufficient balance');
+                return;
+            }
+
+            processPix(amount);
+        }
+
+        function processPix(amount) {
+            const recipient = mockRecipients[selectedPixRecipient];
+            const e2eId = 'E' + new Date().toISOString().slice(2,10).replace(/-/g,'') + Math.random().toString(36).substr(2, 19).toUpperCase();
+            const txId = 'D' + new Date().toISOString().slice(2,10).replace(/-/g,'') + Math.random().toString(36).substr(2, 18).toUpperCase();
+            const timestamp = new Date().toLocaleString(currentLanguage === 'pt' ? 'pt-BR' : 'en-US');
+
+            const receiptHTML = `
+                <div class="receipt-section">
+                    <div class="receipt-section-title">${currentLanguage === 'pt' ? 'Beneficiário' : 'Recipient'}</div>
+                    <div class="receipt-line">
+                        <span>${currentLanguage === 'pt' ? 'Nome:' : 'Name:'}</span>
+                        <strong>${getLang(recipient.name)}</strong>
+                    </div>
+                    <div class="receipt-line">
+                        <span>${currentLanguage === 'pt' ? 'Banco:' : 'Bank:'}</span>
+                        <strong>${recipient.bank}</strong>
+                    </div>
+                    <div class="receipt-line">
+                        <span>${currentLanguage === 'pt' ? 'Chave Pix:' : 'Pix Key:'}</span>
+                        <strong style="font-size: 11px;">${recipient.key}</strong>
+                    </div>
+                </div>
+
+                <div class="receipt-section">
+                    <div class="receipt-section-title">${currentLanguage === 'pt' ? 'Transação' : 'Transaction'}</div>
+                    <div class="receipt-line">
+                        <span>${currentLanguage === 'pt' ? 'Valor:' : 'Amount:'}</span>
+                        <strong>R$ ${amount.toFixed(2).replace('.', ',')}</strong>
+                    </div>
+                    <div class="receipt-line">
+                        <span>${currentLanguage === 'pt' ? 'Data/Hora:' : 'Date/Time:'}</span>
+                        <strong>${timestamp}</strong>
+                    </div>
+                    <div class="receipt-line">
+                        <span>${currentLanguage === 'pt' ? 'Status:' : 'Status:'}</span>
+                        <strong style="color: #28A745;">✓ ${currentLanguage === 'pt' ? 'Completada' : 'Completed'}</strong>
+                    </div>
+                </div>
+
+                <div class="receipt-section">
+                    <div class="receipt-section-title">${currentLanguage === 'pt' ? 'Dados PSP' : 'PSP Data'}</div>
+                    <div class="receipt-line">
+                        <span>${currentLanguage === 'pt' ? 'ID E2E:' : 'E2E ID:'}</span>
+                        <strong style="font-size: 11px;">${e2eId}</strong>
+                    </div>
+                    <div class="receipt-line">
+                        <span>${currentLanguage === 'pt' ? 'ID Transação:' : 'Tx ID:'}</span>
+                        <strong style="font-size: 11px;">${txId}</strong>
+                    </div>
+                    <div class="receipt-line">
+                        <span>${currentLanguage === 'pt' ? 'ISPB Beneficiário:' : 'Beneficiary ISPB:'}</span>
+                        <strong>${recipient.ispb}</strong>
+                    </div>
+                    <div class="receipt-line">
+                        <span>${currentLanguage === 'pt' ? 'Liquidação:' : 'Settlement:'}</span>
+                        <strong>~2,5 segundos / seconds</strong>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('pixReceipt').innerHTML = receiptHTML;
+            balance -= amount;
+            document.getElementById('balanceAmount').textContent = `R$ ${balance.toFixed(2).replace('.', ',')}`;
+            
+            document.getElementById('pixStep1').classList.add('hidden');
+            document.getElementById('pixStep2').classList.remove('hidden');
+        }
+
+        function closeBothModals() {
+            closePixModal();
+        }
+
+        function toggleLanguage() {
+            currentLanguage = currentLanguage === 'pt' ? 'en' : 'pt';
+            document.querySelector('.lang-toggle').textContent = currentLanguage === 'pt' ? '🇧🇷' : '🇬🇧';
+            localStorage.setItem('language', currentLanguage);
+            updateUI();
+        }
+
+        function toggleBalance() {
+            const el = document.getElementById('balanceAmount');
+            el.textContent = el.textContent === `R$ ${balance.toFixed(2).replace('.', ',')}` ? '****' : `R$ ${balance.toFixed(2).replace('.', ',')}`;
+        }
+
+        function showPayModal() {
+            alert(getLang('comingSoon'));
+        }
+
+        function showTransferModal() {
+            alert(getLang('comingSoon'));
+        }
+
+        function showCardModal() {
+            alert(getLang('comingSoon'));
+        }
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            const saved = localStorage.getItem('language');
+            if (saved) currentLanguage = saved;
+            document.querySelector('.lang-toggle').textContent = currentLanguage === 'pt' ? '🇧🇷' : '🇬🇧';
+            updateUI();
+        });
+    </script>
+</body>
+</html>
