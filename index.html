@@ -793,7 +793,6 @@
                 </div>
             </div>
             <button class="lang-toggle" onclick="toggleLanguage()" title="Toggle Language" id="langBtn">PT</button>
-</CANVAS_EDIT_4>
         </div>
 
         <!-- CONTA CORRENTE -->
@@ -838,7 +837,6 @@
                 <div class="action-icon icon-card"></div>
                 <div class="action-label" id="cardLabel">Cartão</div>
             </button>
-</CANVAS_EDIT_2>
         </div>
 
         <!-- BANNER -->
@@ -863,6 +861,80 @@
                     <p id="noTransactionsLabel">Nenhuma transação realizada</p>
                 </div>
             </div>
+        </div>
+    </div>
+
+    <!-- MODAL PAGAR CONTAS -->
+    <div id="payBillsModal" class="modal-full">
+        <div class="modal-full-header">
+            <h2 id="payTitle">Pagar Contas</h2>
+            <button class="close-full-modal" onclick="closePayBillsModal()">×</button>
+        </div>
+        <div class="modal-full-content">
+            <div id="billsList"></div>
+        </div>
+    </div>
+
+    <!-- MODAL TRANSFERÊNCIA -->
+    <div id="transferModal" class="modal-full">
+        <div class="modal-full-header">
+            <h2 id="transferTitle">Transferência Bancária</h2>
+            <button class="close-full-modal" onclick="closeTransferModal()">×</button>
+        </div>
+        <div class="modal-full-content">
+            <div class="form-group">
+                <label id="bankLabel">Banco / Bank</label>
+                <input type="text" id="transferBank" placeholder="Ex: Bradesco, Itaú, Santander">
+            </div>
+            <div class="form-group">
+                <label id="agencyLabel">Agência / Agency</label>
+                <input type="text" id="transferAgency" placeholder="1234-5">
+            </div>
+            <div class="form-group">
+                <label id="accountLabel">Conta / Account</label>
+                <input type="text" id="transferAccount" placeholder="654321-8">
+            </div>
+            <div class="form-group">
+                <label id="holderLabel">Titular / Holder</label>
+                <input type="text" id="transferHolder" placeholder="Nome Completo">
+            </div>
+            <div class="form-group">
+                <label id="amountTransferLabel">Valor / Amount</label>
+                <div style="display: flex; gap: 8px;">
+                    <span style="padding: 14px; color: #999; font-weight: 600;">R$</span>
+                    <input type="number" id="transferAmount" placeholder="0,00" step="0.01" min="0">
+                </div>
+            </div>
+            <button class="pix-confirm" onclick="confirmTransfer()">Confirmar Transferência</button>
+            <button class="cancel-btn" onclick="closeTransferModal()">Cancelar</button>
+        </div>
+    </div>
+
+    <!-- MODAL CARTÃO -->
+    <div id="cardModal" class="modal-full">
+        <div class="modal-full-header">
+            <h2 id="cardTitle">Meu Cartão / My Card</h2>
+            <button class="close-full-modal" onclick="closeCardModal()">×</button>
+        </div>
+        <div class="modal-full-content">
+            <div class="card-detail">
+                <div class="card-number">4532 •••• •••• 8901</div>
+                <div class="card-info">
+                    <div class="card-holder">
+                        <div style="font-size: 10px; opacity: 0.8;">TITULARI</div>
+                        <div>LUCAS OLIVEIRA</div>
+                    </div>
+                    <div class="card-expiry">
+                        <div style="font-size: 10px; opacity: 0.8;">VALIDADE</div>
+                        <div>12/27</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cardStats"></div>
+
+            <button class="pix-confirm" style="background: #EF4444;" onclick="blockCard()">Bloquear Cartão / Block Card</button>
+            <button class="cancel-btn" onclick="closeCardModal()">Voltar / Back</button>
         </div>
     </div>
 
@@ -1134,10 +1206,8 @@
             const mockRecipient = { key: pixKey, bank: 'Banco Destino', ispb: '12345678' };
             processPix(amount, mockRecipient);
         }
-</CANVAS_EDIT_8>
 
         function processPix(amount, recipient) {
-</CANVAS_EDIT_9>
             const e2eId = 'E' + new Date().toISOString().slice(2,10).replace(/-/g,'') + Math.random().toString(36).substr(2, 19).toUpperCase();
             const txId = 'D' + new Date().toISOString().slice(2,10).replace(/-/g,'') + Math.random().toString(36).substr(2, 18).toUpperCase();
             const timestamp = new Date().toLocaleString(currentLanguage === 'pt' ? 'pt-BR' : 'en-US');
@@ -1218,7 +1288,6 @@
             document.getElementById('pixStep1').classList.add('hidden');
             document.getElementById('pixStep2').classList.remove('hidden');
         }
-</CANVAS_EDIT_10>
 
         function closeBothModals() {
             closePixModal();
@@ -1231,7 +1300,6 @@
             localStorage.setItem('language', currentLanguage);
             updateUI();
         }
-</CANVAS_EDIT_6>
 
         function toggleBalance() {
             const el = document.getElementById('balanceAmount');
@@ -1412,7 +1480,6 @@
             document.getElementById('pixKey').value = key;
             document.getElementById('suggestionsBox').style.display = 'none';
         }
-</CANVAS_EDIT_7>
 
         function saveToLocalStorage() {
             const data = {
@@ -1446,7 +1513,6 @@
             document.getElementById('langBtn').textContent = currentLanguage === 'pt' ? 'PT' : 'EN';
             updateUI();
         });
-</CANVAS_EDIT_11>
     </script>
 </body>
 </html>
