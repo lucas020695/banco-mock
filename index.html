@@ -560,6 +560,63 @@
         .hidden {
             display: none !important;
         }
+
+        /* Transaction List */
+        .transaction-list {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .transaction-item {
+            padding: 16px;
+            background: #F8FAFF;
+            border-radius: 12px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-left: 4px solid #0047A8;
+        }
+
+        .transaction-info {
+            flex: 1;
+        }
+
+        .transaction-merchant {
+            font-weight: 600;
+            font-size: 14px;
+            margin-bottom: 4px;
+        }
+
+        .transaction-date {
+            font-size: 12px;
+            color: #999;
+        }
+
+        .transaction-amount {
+            font-weight: 700;
+            font-size: 15px;
+        }
+
+        .transaction-amount.credit {
+            color: #28A745;
+        }
+
+        .transaction-amount.debit {
+            color: #EF4444;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 40px 20px;
+            color: #999;
+        }
+
+        .empty-icon {
+            font-size: 48px;
+            margin-bottom: 12px;
+        }
     </style>
 </head>
 <body>
@@ -627,18 +684,20 @@
             <button class="banner-btn" onclick="showPixModal()" id="bannerBtn">Começar Pix</button>
         </div>
 
-        <!-- ATIVIDADES -->
+        <!-- EXTRATO / TRANSACTIONS -->
         <div class="activities">
             <div class="activities-header">
-                <h3 id="activitiesTitle">Atividades</h3>
-                <button class="filter-btn" onclick="alert(getLang('comingSoon'))" id="filterBtn">
+                <h3 id="activitiesTitle">Extrato</h3>
+                <button class="filter-btn" onclick="filterTransactions()" id="filterBtn">
                     🗂️ <span id="filterLabel">Filtro</span>
                 </button>
             </div>
-            <div class="date" id="dateLabel">Hoje · 09 Jan</div>
-            <div class="activity" onclick="alert(getLang('limitDetail'))">
-                <div class="activity-title" id="activityTitle">Limite da conta não pode ser ativado</div>
-                <div class="activity-desc" id="activityDesc">Toque para ver o que precisa ajustar no seu limite.</div>
+            <div class="date" id="dateLabel"></div>
+            <div class="transaction-list" id="transactionList">
+                <div class="empty-state">
+                    <div class="empty-icon">📋</div>
+                    <p id="noTransactionsLabel">Nenhuma transação realizada</p>
+                </div>
             </div>
         </div>
     </div>
@@ -716,9 +775,10 @@
                 successTitle: 'Pix Enviado com Sucesso!',
                 successMsg: 'Seu Pix foi processado instantaneamente.',
                 doneBtn: 'Voltar ao Dashboard',
-                statementMsg: '📊 Extrato mock carregado!',
+                statementMsg: '📊 Extrato carregado!',
                 comingSoon: '🔄 Esta funcionalidade em breve!',
                 limitDetail: '📋 Detalhes do limite da sua conta.',
+                noTransactionsLabel: 'Nenhuma transação realizada',
                 joao: 'João Silva',
                 maria: 'Maria Santos',
                 pedro: 'Pedro Lima',
@@ -773,7 +833,8 @@
 
         let currentLanguage = 'pt';
         let selectedPixRecipient = null;
-        let balance = 12450.82;
+        let balance = 0;
+        let transactions = [];
 
         function getLang(key) {
             return translations[currentLanguage][key] || key;
@@ -784,6 +845,7 @@
             document.getElementById('nameLabel').innerHTML = getLang('nameLabel') + ' <span>▼</span>';
             document.getElementById('accountTitle').textContent = getLang('accountTitle');
             document.getElementById('balanceLabel').textContent = getLang('balanceLabel');
+            document.getElementById('balanceAmount').textContent = `R$ ${balance.toFixed(2).replace('.', ',')}`;
             document.getElementById('limitLabel').textContent = getLang('limitLabel');
             document.getElementById('limitValue').textContent = getLang('limitValue');
             document.getElementById('openFinanceLabel').textContent = getLang('openFinanceLabel');
@@ -798,9 +860,6 @@
             document.getElementById('bannerBtn').textContent = getLang('bannerBtn');
             document.getElementById('activitiesTitle').textContent = getLang('activitiesTitle');
             document.getElementById('filterLabel').textContent = getLang('filterLabel');
-            document.getElementById('dateLabel').textContent = getLang('dateLabel');
-            document.getElementById('activityTitle').textContent = getLang('activityTitle');
-            document.getElementById('activityDesc').textContent = getLang('activityDesc');
             document.getElementById('pixTitle').textContent = getLang('pixTitle');
             document.getElementById('selectRecipientLabel').textContent = getLang('selectRecipientLabel');
             document.getElementById('amountLabel').textContent = getLang('amountLabel');
@@ -809,8 +868,10 @@
             document.getElementById('successTitle').textContent = getLang('successTitle');
             document.getElementById('successMsg').textContent = getLang('successMsg');
             document.getElementById('doneBtn').textContent = getLang('doneBtn');
+            document.getElementById('noTransactionsLabel').textContent = getLang('noTransactionsLabel');
             
             renderPixContacts();
+            renderTransactions();
         }
 
         function renderPixContacts() {
@@ -819,6 +880,40 @@
                 <div class="pix-contact ${selectedPixRecipient === i ? 'active' : ''}" onclick="selectPixRecipient(${i})">
                     <div class="contact-name">${getLang(r.name)}</div>
                     <div class="contact-type">${r.type}</div>
+                </div>
+            `).join('');
+        }
+
+        function renderTransactions() {
+            const list = document.getElementById('transactionList');
+            const dateLabel = document.getElementById('dateLabel');
+            
+            if (transactions.length === 0) {
+                list.innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-icon">📋</div>
+                        <p>${getLang('noTransactionsLabel')}</p>
+                    </div>
+                `;
+                dateLabel.textContent = '';
+                return;
+            }
+
+            const today = new Date();
+            dateLabel.textContent = today.toLocaleDateString(currentLanguage === 'pt' ? 'pt-BR' : 'en-US', { 
+                day: '2-digit', 
+                month: 'short' 
+            }).replace(/de /g, '');
+
+            list.innerHTML = transactions.map(tx => `
+                <div class="transaction-item">
+                    <div class="transaction-info">
+                        <div class="transaction-merchant">${tx.merchant}</div>
+                        <div class="transaction-date">${tx.date}</div>
+                    </div>
+                    <div class="transaction-amount ${tx.type}">
+                        ${tx.type === 'credit' ? '+' : '-'} R$ ${Math.abs(tx.amount).toFixed(2).replace('.', ',')}
+                    </div>
                 </div>
             `).join('');
         }
@@ -832,6 +927,7 @@
             document.getElementById('pixModal').classList.add('active');
             document.getElementById('pixStep1').classList.remove('hidden');
             document.getElementById('pixStep2').classList.add('hidden');
+            document.getElementById('pixAmount').value = '';
         }
 
         function closePixModal() {
@@ -851,6 +947,11 @@
             
             if (!amount || amount <= 0) {
                 alert(currentLanguage === 'pt' ? 'Insira um valor válido' : 'Enter a valid amount');
+                return;
+            }
+            
+            if (balance === 0) {
+                alert(currentLanguage === 'pt' ? 'Adicione um saldo inicial primeiro!' : 'Add initial balance first!');
                 return;
             }
             
@@ -926,12 +1027,28 @@
             balance -= amount;
             document.getElementById('balanceAmount').textContent = `R$ ${balance.toFixed(2).replace('.', ',')}`;
             
+            // Adiciona transação ao histórico
+            const txDate = new Date().toLocaleTimeString(currentLanguage === 'pt' ? 'pt-BR' : 'en-US', {
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            transactions.unshift({
+                merchant: `Pix para ${getLang(recipient.name)}`,
+                amount: amount,
+                date: txDate,
+                type: 'debit'
+            });
+
+            saveToLocalStorage();
+            
             document.getElementById('pixStep1').classList.add('hidden');
             document.getElementById('pixStep2').classList.remove('hidden');
         }
 
         function closeBothModals() {
             closePixModal();
+            renderTransactions();
         }
 
         function toggleLanguage() {
@@ -958,10 +1075,39 @@
             alert(getLang('comingSoon'));
         }
 
+        function filterTransactions() {
+            alert(getLang('comingSoon'));
+        }
+
+        function saveToLocalStorage() {
+            const data = {
+                balance: balance,
+                transactions: transactions,
+                language: currentLanguage
+            };
+            localStorage.setItem('bancoMockData', JSON.stringify(data));
+        }
+
+        function loadFromLocalStorage() {
+            const saved = localStorage.getItem('bancoMockData');
+            if (saved) {
+                const data = JSON.parse(saved);
+                balance = data.balance || 0;
+                transactions = data.transactions || [];
+                currentLanguage = data.language || 'pt';
+            } else {
+                // Prompt para saldo inicial
+                const initialBalance = prompt(currentLanguage === 'pt' ? 'Digite seu saldo inicial (R$):' : 'Enter your initial balance (R$):', '1000');
+                if (initialBalance && parseFloat(initialBalance) > 0) {
+                    balance = parseFloat(initialBalance);
+                    saveToLocalStorage();
+                }
+            }
+        }
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
-            const saved = localStorage.getItem('language');
-            if (saved) currentLanguage = saved;
+            loadFromLocalStorage();
             document.querySelector('.lang-toggle').textContent = currentLanguage === 'pt' ? '🇧🇷' : '🇬🇧';
             updateUI();
         });
