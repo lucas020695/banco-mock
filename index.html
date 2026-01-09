@@ -617,7 +617,169 @@
             font-size: 48px;
             margin-bottom: 12px;
         }
+
+        .quick-suggestion {
+            padding: 8px 12px;
+            background: white;
+            border: 1px solid #E0E0E0;
+            border-radius: 8px;
+            font-size: 12px;
+            cursor: pointer;
+            margin-bottom: 6px;
+            transition: all 0.2s;
+        }
+
+        .quick-suggestion:hover {
+            background: #E3F2FD;
+            border-color: #0047A8;
+        }
+
+        .modal-full {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: white;
+            display: none;
+            z-index: 2500;
+            overflow-y: auto;
+            flex-direction: column;
+        }
+
+        .modal-full.active {
+            display: flex;
+        }
+
+        .modal-full-header {
+            background: #0047A8;
+            color: white;
+            padding: 16px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: sticky;
+            top: 0;
+        }
+
+        .modal-full-header h2 {
+            font-size: 18px;
+            font-weight: 700;
+        }
+
+        .close-full-modal {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 24px;
+            cursor: pointer;
+        }
+
+        .modal-full-content {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .bill-item {
+            background: #F8FAFF;
+            padding: 16px;
+            border-radius: 12px;
+            margin-bottom: 12px;
+            border-left: 4px solid #0047A8;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .bill-item:hover {
+            background: #E3F2FD;
+        }
+
+        .bill-item.paid {
+            border-left-color: #10B981;
+            opacity: 0.6;
+        }
+
+        .bill-name {
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .bill-amount {
+            font-size: 14px;
+            font-weight: 700;
+            color: #EF4444;
+        }
+
+        .bill-date {
+            font-size: 12px;
+            color: #999;
+            margin-top: 4px;
+        }
+
+        .bill-status {
+            font-size: 11px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            margin-top: 8px;
+        }
+
+        .bill-status.pending {
+            background: rgba(239, 68, 68, 0.1);
+            color: #EF4444;
+        }
+
+        .bill-status.paid {
+            background: rgba(16, 185, 129, 0.1);
+            color: #10B981;
+        }
+
+        .card-detail {
+            background: linear-gradient(135deg, #0047A8 0%, #003580 100%);
+            color: white;
+            padding: 24px;
+            border-radius: 16px;
+            margin-bottom: 20px;
+            font-family: monospace;
+        }
+
+        .card-number {
+            font-size: 14px;
+            letter-spacing: 2px;
+            margin-bottom: 16px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.1);
+        }
+
+        .card-info {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+        }
+
+        .card-holder {
+            text-align: left;
+        }
+
+        .card-expiry {
+            text-align: right;
+        }
+
+        .card-info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            margin-bottom: 8px;
+            font-size: 13px;
+        }
+
+        .card-info-row strong {
+            color: #fff;
+        }
     </style>
+</CANVAS_EDIT_3>
 </head>
 <body>
     <div class="app">
@@ -630,7 +792,8 @@
                     <strong id="nameLabel">Lucas <span>▼</span></strong>
                 </div>
             </div>
-            <button class="lang-toggle" onclick="toggleLanguage()" title="Toggle Language">🇧🇷</button>
+            <button class="lang-toggle" onclick="toggleLanguage()" title="Toggle Language" id="langBtn">PT</button>
+</CANVAS_EDIT_4>
         </div>
 
         <!-- CONTA CORRENTE -->
@@ -663,7 +826,7 @@
                 <div class="action-icon icon-pix"></div>
                 <div class="action-label" id="pixLabel">Pix</div>
             </button>
-            <button class="action" onclick="showPayModal()">
+            <button class="action" onclick="showPayBillsModal()">
                 <div class="action-icon icon-pay"></div>
                 <div class="action-label" id="payLabel">Pagar</div>
             </button>
@@ -675,6 +838,7 @@
                 <div class="action-icon icon-card"></div>
                 <div class="action-label" id="cardLabel">Cartão</div>
             </button>
+</CANVAS_EDIT_2>
         </div>
 
         <!-- BANNER -->
@@ -712,17 +876,23 @@
                 </div>
 
                 <div class="form-group">
-                    <label id="selectRecipientLabel">Selecione o Beneficiário</label>
-                    <div class="pix-grid" id="pixContactsGrid"></div>
+                    <label id="pixKeyLabel">Chave Pix / Pix Key</label>
+                    <input type="text" id="pixKey" placeholder="CPF, Email, Telefone ou Chave" style="margin-bottom: 8px;">
+                    <div style="font-size: 12px; color: #999; margin-top: 8px;" id="pixKeyHelp">Insira CPF, email, telefone ou chave aleatória</div>
+                    <div style="margin-top: 12px; padding: 12px; background: #F0F0F0; border-radius: 8px; display: none;" id="suggestionsBox">
+                        <div style="font-size: 12px; font-weight: 600; margin-bottom: 8px;">Sugestões rápidas:</div>
+                        <div id="quickSuggestions"></div>
+                    </div>
                 </div>
 
                 <div class="form-group">
-                    <label id="amountLabel">Valor</label>
+                    <label id="amountLabel">Valor / Amount</label>
                     <div style="display: flex; gap: 8px;">
-                        <span style="padding: 16px; color: #999; font-weight: 600;">R$</span>
+                        <span style="padding: 14px; color: #999; font-weight: 600;">R$</span>
                         <input type="number" id="pixAmount" placeholder="0,00" step="0.01" min="0">
                     </div>
                 </div>
+</CANVAS_EDIT_1>
 
                 <button class="pix-confirm" onclick="confirmPix()" id="confirmBtn">Confirmar Pix</button>
                 <button class="cancel-btn" onclick="closePixModal()" id="cancelBtn">Cancelar</button>
@@ -938,10 +1108,11 @@
         }
 
         function confirmPix() {
+            const pixKey = document.getElementById('pixKey').value.trim();
             const amount = parseFloat(document.getElementById('pixAmount').value);
             
-            if (selectedPixRecipient === null) {
-                alert(currentLanguage === 'pt' ? 'Selecione um beneficiário' : 'Select a recipient');
+            if (!pixKey) {
+                alert(currentLanguage === 'pt' ? 'Insira uma chave Pix' : 'Enter a Pix key');
                 return;
             }
             
@@ -960,11 +1131,13 @@
                 return;
             }
 
-            processPix(amount);
+            const mockRecipient = { key: pixKey, bank: 'Banco Destino', ispb: '12345678' };
+            processPix(amount, mockRecipient);
         }
+</CANVAS_EDIT_8>
 
-        function processPix(amount) {
-            const recipient = mockRecipients[selectedPixRecipient];
+        function processPix(amount, recipient) {
+</CANVAS_EDIT_9>
             const e2eId = 'E' + new Date().toISOString().slice(2,10).replace(/-/g,'') + Math.random().toString(36).substr(2, 19).toUpperCase();
             const txId = 'D' + new Date().toISOString().slice(2,10).replace(/-/g,'') + Math.random().toString(36).substr(2, 18).toUpperCase();
             const timestamp = new Date().toLocaleString(currentLanguage === 'pt' ? 'pt-BR' : 'en-US');
@@ -1034,7 +1207,7 @@
             });
             
             transactions.unshift({
-                merchant: `Pix para ${getLang(recipient.name)}`,
+                merchant: `${currentLanguage === 'pt' ? 'Pix para ' : 'Pix to '} ${recipient.key}`,
                 amount: amount,
                 date: txDate,
                 type: 'debit'
@@ -1045,6 +1218,7 @@
             document.getElementById('pixStep1').classList.add('hidden');
             document.getElementById('pixStep2').classList.remove('hidden');
         }
+</CANVAS_EDIT_10>
 
         function closeBothModals() {
             closePixModal();
@@ -1053,31 +1227,192 @@
 
         function toggleLanguage() {
             currentLanguage = currentLanguage === 'pt' ? 'en' : 'pt';
-            document.querySelector('.lang-toggle').textContent = currentLanguage === 'pt' ? '🇧🇷' : '🇬🇧';
+            document.getElementById('langBtn').textContent = currentLanguage === 'pt' ? 'PT' : 'EN';
             localStorage.setItem('language', currentLanguage);
             updateUI();
         }
+</CANVAS_EDIT_6>
 
         function toggleBalance() {
             const el = document.getElementById('balanceAmount');
             el.textContent = el.textContent === `R$ ${balance.toFixed(2).replace('.', ',')}` ? '****' : `R$ ${balance.toFixed(2).replace('.', ',')}`;
         }
 
-        function showPayModal() {
-            alert(getLang('comingSoon'));
+        function showPayBillsModal() {
+            renderBills();
+            document.getElementById('payBillsModal').classList.add('active');
+        }
+
+        function closePayBillsModal() {
+            document.getElementById('payBillsModal').classList.remove('active');
         }
 
         function showTransferModal() {
-            alert(getLang('comingSoon'));
+            document.getElementById('transferModal').classList.add('active');
+        }
+
+        function closeTransferModal() {
+            document.getElementById('transferModal').classList.remove('active');
+            document.getElementById('transferBank').value = '';
+            document.getElementById('transferAgency').value = '';
+            document.getElementById('transferAccount').value = '';
+            document.getElementById('transferHolder').value = '';
+            document.getElementById('transferAmount').value = '';
         }
 
         function showCardModal() {
-            alert(getLang('comingSoon'));
+            renderCardInfo();
+            document.getElementById('cardModal').classList.add('active');
+        }
+
+        function closeCardModal() {
+            document.getElementById('cardModal').classList.remove('active');
         }
 
         function filterTransactions() {
             alert(getLang('comingSoon'));
         }
+
+        function renderBills() {
+            const mockBills = [
+                { name: 'Energia Elétrica / Electric Bill', amount: 185.50, dueDate: '15 Jan', status: 'pending' },
+                { name: 'Internet / Internet', amount: 99.90, dueDate: '10 Jan', status: 'paid' },
+                { name: 'Água / Water', amount: 65.30, dueDate: '20 Jan', status: 'pending' },
+                { name: 'Seguro / Insurance', amount: 320.00, dueDate: '05 Jan', status: 'paid' },
+                { name: 'Netflix', amount: 59.90, dueDate: '25 Jan', status: 'pending' },
+                { name: 'Gym / Academia', amount: 129.90, dueDate: '01 Jan', status: 'paid' }
+            ];
+
+            const billsList = document.getElementById('billsList');
+            billsList.innerHTML = mockBills.map(bill => `
+                <div class="bill-item ${bill.status}" onclick="payBill('${bill.name}', ${bill.amount})">
+                    <div class="bill-name">${bill.name}</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center;">
+                        <div class="bill-amount">-R$ ${bill.amount.toFixed(2).replace('.', ',')}</div>
+                        <div style="text-align: right;">
+                            <div class="bill-status ${bill.status}">${bill.status === 'pending' ? currentLanguage === 'pt' ? 'Pendente' : 'Pending' : currentLanguage === 'pt' ? 'Pago' : 'Paid'}</div>
+                            <div class="bill-date">${bill.dueDate}</div>
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function payBill(billName, amount) {
+            if (confirm((currentLanguage === 'pt' ? 'Confirmar pagamento de ' : 'Confirm payment of ') + billName + '?')) {
+                if (amount <= balance) {
+                    balance -= amount;
+                    saveToLocalStorage();
+                    renderBills();
+                    updateUI();
+                    alert((currentLanguage === 'pt' ? 'Conta paga com sucesso!' : 'Bill paid successfully!'));
+                } else {
+                    alert(currentLanguage === 'pt' ? 'Saldo insuficiente' : 'Insufficient balance');
+                }
+            }
+        }
+
+        function confirmTransfer() {
+            const bank = document.getElementById('transferBank').value;
+            const agency = document.getElementById('transferAgency').value;
+            const account = document.getElementById('transferAccount').value;
+            const holder = document.getElementById('transferHolder').value;
+            const amount = parseFloat(document.getElementById('transferAmount').value);
+
+            if (!bank || !agency || !account || !holder || !amount || amount <= 0) {
+                alert(currentLanguage === 'pt' ? 'Preencha todos os campos' : 'Fill all fields');
+                return;
+            }
+
+            if (amount > balance) {
+                alert(currentLanguage === 'pt' ? 'Saldo insuficiente' : 'Insufficient balance');
+                return;
+            }
+
+            if (confirm((currentLanguage === 'pt' ? 'Transferir R$ ' : 'Transfer R$ ') + amount.toFixed(2) + ' para ' + holder + '?')) {
+                balance -= amount;
+                transactions.unshift({
+                    merchant: `${currentLanguage === 'pt' ? 'Transferência para ' : 'Transfer to '} ${holder}`,
+                    amount: amount,
+                    date: new Date().toLocaleTimeString(currentLanguage === 'pt' ? 'pt-BR' : 'en-US', { hour: '2-digit', minute: '2-digit' }),
+                    type: 'debit'
+                });
+                saveToLocalStorage();
+                updateUI();
+                closeTransferModal();
+                alert(currentLanguage === 'pt' ? 'Transferência realizada!' : 'Transfer completed!');
+            }
+        }
+
+        function renderCardInfo() {
+            const cardStats = document.getElementById('cardStats');
+            cardStats.innerHTML = `
+                <div class="card-info-row">
+                    <span>${currentLanguage === 'pt' ? 'Limite Total' : 'Total Limit'}</span>
+                    <strong>R$ 15.000,00</strong>
+                </div>
+                <div class="card-info-row">
+                    <span>${currentLanguage === 'pt' ? 'Disponível' : 'Available'}</span>
+                    <strong>R$ 12.340,50</strong>
+                </div>
+                <div class="card-info-row">
+                    <span>${currentLanguage === 'pt' ? 'Fatura Aberta' : 'Open Invoice'}</span>
+                    <strong>R$ 2.659,50</strong>
+                </div>
+                <div class="card-info-row">
+                    <span>${currentLanguage === 'pt' ? 'Vencimento' : 'Due Date'}</span>
+                    <strong>10 de Fevereiro</strong>
+                </div>
+            `;
+        }
+
+        function blockCard() {
+            if (confirm(currentLanguage === 'pt' ? 'Bloquear cartão?' : 'Block card?')) {
+                alert(currentLanguage === 'pt' ? 'Cartão bloqueado com sucesso!' : 'Card blocked successfully!');
+                closeCardModal();
+            }
+        }
+
+        function showPixSuggestions() {
+            const input = document.getElementById('pixKey').value;
+            const box = document.getElementById('suggestionsBox');
+            const suggestions = document.getElementById('quickSuggestions');
+
+            if (input.length === 0) {
+                box.style.display = 'none';
+                return;
+            }
+
+            const mockPixKeys = [
+                { key: '123.456.789-00', name: 'João Silva', bank: 'Nubank' },
+                { key: 'maria@email.com', name: 'Maria Santos', bank: 'Itaú' },
+                { key: '(11) 98765-4321', name: 'Pedro Lima', bank: 'Bradesco' },
+                { key: 'uuid-a7c3f2e8-b1d9', name: 'Ana Costa', bank: 'Caixa' }
+            ];
+
+            const filtered = mockPixKeys.filter(p => 
+                p.key.toLowerCase().includes(input.toLowerCase()) || 
+                p.name.toLowerCase().includes(input.toLowerCase())
+            );
+
+            if (filtered.length > 0) {
+                suggestions.innerHTML = filtered.map(f => `
+                    <div class="quick-suggestion" onclick="setPixKey('${f.key}', '${f.name}')">
+                        <div style="font-weight: 600;">${f.name}</div>
+                        <div style="font-size: 11px; color: #999;">${f.key} • ${f.bank}</div>
+                    </div>
+                `).join('');
+                box.style.display = 'block';
+            } else {
+                box.style.display = 'none';
+            }
+        }
+
+        function setPixKey(key, name) {
+            document.getElementById('pixKey').value = key;
+            document.getElementById('suggestionsBox').style.display = 'none';
+        }
+</CANVAS_EDIT_7>
 
         function saveToLocalStorage() {
             const data = {
@@ -1108,9 +1443,10 @@
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadFromLocalStorage();
-            document.querySelector('.lang-toggle').textContent = currentLanguage === 'pt' ? '🇧🇷' : '🇬🇧';
+            document.getElementById('langBtn').textContent = currentLanguage === 'pt' ? 'PT' : 'EN';
             updateUI();
         });
+</CANVAS_EDIT_11>
     </script>
 </body>
 </html>
